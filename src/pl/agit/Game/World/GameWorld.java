@@ -70,6 +70,8 @@ public abstract class GameWorld {
     	// removed dead things
     	
     	cleanupSprites();
+    	
+    	respawnElements();
     	}
     
     	}); // oneFrame
@@ -113,6 +115,11 @@ public abstract class GameWorld {
      * @param sprite - The sprite to update.
      */
     protected void handleUpdate(Sprite sprite) {
+    }
+    
+    //dodanie elemntow w trakcie gry
+    protected void respawnElements(){
+    	
     }
  
     /**

@@ -9,6 +9,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBuilder;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.VBox;
@@ -22,6 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.Sprites.Characters.Asteroid;
+import pl.agit.Game.Sprites.Characters.Missile;
 import pl.agit.Game.Sprites.Characters.SpaceShip;
 import pl.agit.Game.World.GUIElements.GameStats;
 
@@ -29,6 +32,8 @@ public class AsteroidDemolition extends GameWorld {
 	
     
     private GameStats gameStats;
+    
+    private int asteroidCount = 0;
     
     private SpaceShip ship = new SpaceShip();
  
@@ -54,6 +59,10 @@ public class AsteroidDemolition extends GameWorld {
        
         getGameScene().getStylesheets().addAll(cssPath);
         primaryStage.setScene(getGameScene());
+        
+        Sprite[] s = {ship};
+        getSpriteManager().addSprites(s);
+        getSceneElements().getChildren().add(0,ship.node);
  
         // tworzenie asteroids
         //generateManySpheres(150);
@@ -66,9 +75,7 @@ public class AsteroidDemolition extends GameWorld {
         
        
         getSceneElements().getChildren().add(gameStats.getStats());
-        Sprite[] s = {ship};
-        getSpriteManager().addSprites(s);
-        getSceneElements().getChildren().add(ship.node);
+        
         
         
         setupInput(primaryStage);
@@ -76,9 +83,14 @@ public class AsteroidDemolition extends GameWorld {
     }
     
     
-    private void setupInput(Stage primaryStage){
+    private void setupInput(final Stage primaryStage){
     	
-    	EventHandler<MouseEvent> moveMouseEv = new EventHandler<MouseEvent>(){
+    	
+    	final Delta d = new Delta();
+    	double dy;
+    	
+    	//samo poruszanie
+    	EventHandler moveMouseEv = new EventHandler<MouseEvent>(){
 			@Override public void handle(MouseEvent event) {
 				ship.setMpozX(event.getX());
 				ship.setMpozY(event.getY());
@@ -87,7 +99,46 @@ public class AsteroidDemolition extends GameWorld {
 			}
 			
 		};
+		
+		//nacisniecie przycisku myszy
+		EventHandler moveOrFireMouseEv = new EventHandler<MouseEvent>(){
+			@Override public void handle(MouseEvent event) {
+				if(event.getButton()==MouseButton.PRIMARY){
+					
+					Missile m = ship.fire();
+					
+					Sprite[] s = {m};
+		            getSpriteManager().addSprites(s);
+		            
+		            // add sprite's 
+		            getSceneElements().getChildren().add(0, m.node);
+					
+				d.x = primaryStage.getX() - event.getScreenX();
+				d.y = primaryStage.getY() - event.getScreenY();
+				/*ship.setMpozX(event.getX());
+				ship.setMpozY(event.getY());
+				
+				gameStats.updateMousePos(event.getX(), event.getY());*/
+				}
+			}
+			
+		};
+		
+		//strzelanie i poruszanie
+		EventHandler movedragOrFireMouseEv = new EventHandler<MouseEvent>(){
+			@Override public void handle(MouseEvent event) {
+				ship.setMpozX(event.getX());
+				ship.setMpozY(event.getY());
+				
+				gameStats.updateMousePos(event.getX(), event.getY());}
+			
+			
+		};
+		
 		primaryStage.getScene().setOnMouseMoved(moveMouseEv);
+		//primaryStage.getScene().setOnMouseClicked(moveMouseEv);
+		primaryStage.getScene().setOnMousePressed(moveOrFireMouseEv);
+	    primaryStage.getScene().setOnMouseDragged(movedragOrFireMouseEv);
     	
     }
  
@@ -97,6 +148,7 @@ public class AsteroidDemolition extends GameWorld {
     private void generateAsteroids(){
     	Random random = new Random();
     	int anumb = random.nextInt(10);
+    	asteroidCount = asteroidCount+anumb;
     	Scene scene= getGameScene();
     	for(int i=0;i<anumb;i++){
     		
@@ -172,24 +224,29 @@ public class AsteroidDemolition extends GameWorld {
     protected void handleUpdate(Sprite sprite) {
         if (sprite instanceof Asteroid) {
             Asteroid sphere = (Asteroid) sprite;
+            
+            if (sphere.node.getTranslateY() > getGameScene().getHeight()-
+                    sphere.node.getBoundsInParent().getHeight() ) {
+                  //sphere.vY = sphere.vY * -1;
+              	  Sprite[] s = {sprite};
+              	  
+              	  ((Asteroid) sprite).noImplode(this);
+              	getSpriteManager().addSpritesToBeRemoved(s);
+              	asteroidCount--;
  
-            // advance the spheres velocity
-            sphere.update();
- 
-            // usuniecie asteroid gdy dojda do krawedzi
-              if (sphere.node.getTranslateY() > getGameScene().getHeight()-
-                  sphere.node.getBoundsInParent().getHeight() ) {
-                //sphere.vY = sphere.vY * -1;
-            	  Sprite[] s = {sprite};
-            	  getSpriteManager().addSpritesToBeRemoved(s);
-            	  ((Asteroid) sprite).noImplode(this);
-            	  
-            	  if(getSpriteManager().getAllSprites().size()<5) generateAsteroids();
-            	 // cleanupSprites();
+           
             }
+            
         }
         
+       
+        sprite.update();
         
+    }
+    
+    @Override
+    protected void respawnElements(){
+    	 if(asteroidCount<5) generateAsteroids(); //dodawanie asteroid
     }
  
     /**
@@ -221,5 +278,5 @@ public class AsteroidDemolition extends GameWorld {
  
     }
 
-	
+    private class Delta {double x; double y;};
 }

@@ -35,8 +35,8 @@ public class SpaceShip extends Sprite{
     	ImageView shipView = new ImageView(shipImage);
     	shipBook.getChildren().addAll(shipView);
     	
-    	shipBook.setTranslateX(500);
-    	shipBook.setTranslateY(450);
+    	shipBook.setTranslateX(100);
+    	shipBook.setTranslateY(100);
     	node = shipBook;
     	
     }
@@ -45,9 +45,17 @@ public class SpaceShip extends Sprite{
 	public void update() {
 		// TODO Auto-generated method stub
 		//EventHandler<MouseEvent> ev = getMouseMoveEvent();
-		
+		//System.out.print("T");
 		shipBook.setTranslateX(mpozX);
-    	shipBook.setTranslateY(mpozY);
+		shipBook.setTranslateY(mpozY);
+		
+	}
+	
+	public Missile fire(){
+		
+		Missile m = new Missile(10,mpozX+shipBook.getChildren().get(0).getBoundsInLocal().getWidth()/2,mpozY,0,4);
+		
+		return m;
 		
 	}
 	
@@ -69,10 +77,10 @@ public class SpaceShip extends Sprite{
 		this.mpozY = mpozY;
 	}
 
-	public static void main(String[] args){
+	/*public static void main(String[] args){
 		
 		
 		
-	}
+	}*/
 
 }

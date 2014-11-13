@@ -40,7 +40,7 @@ public class GameStats {
 	
 public void updateMousePos(double valx, double valy){
 		
-		asteroidCounter.setText("X = "+Double.toString(valx)+" -- Y = "+Double.toString(valy));
+		mousePos.setText("X = "+Double.toString(valx)+" -- Y = "+Double.toString(valy));
 	}
 	
 	public VBox getStats(){

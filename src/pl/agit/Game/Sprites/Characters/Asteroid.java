@@ -59,6 +59,7 @@ public class Asteroid extends Sprite {
 
 	@Override
 	public void update() {
+		//System.out.print("A");
 		// TODO Auto-generated method stub
 		node.setTranslateX(node.getTranslateX() + vX);
         node.setTranslateY(node.getTranslateY() + vY);
