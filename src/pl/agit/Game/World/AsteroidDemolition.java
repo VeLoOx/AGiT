@@ -8,9 +8,12 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBuilder;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +41,9 @@ public class AsteroidDemolition extends GameWorld {
     
     private int asteroidCount = 0;
     private int missileCount = 0;
+    Image backgroundImage = new Image("/GameGfxFiles/space.jpg");
+    ImageView backView = new ImageView(backgroundImage);
+    Group g = new Group();
     
     private SpaceShip ship = new SpaceShip();
  
@@ -48,23 +54,27 @@ public class AsteroidDemolition extends GameWorld {
     
     @Override
     public void initialize(final Stage primaryStage) {
-      
+      //backView.setD
         primaryStage.setTitle(getWindowTitle()); //tytul okna
-        
+        g.getChildren().add(backView);
+        Node node = g;
+        node.toBack();
         gameStats = new GameStats(1050, 650);
  
         // tworzenie sceny
         setSceneElements(new Group());
-        setGameScene(new Scene(getSceneElements(), 1050, 650));
+        Scene sc = new Scene(getSceneElements(), 1050, 650);
+        setGameScene(sc);
         String cssPath ="/pl/agit/css/scene.css";
-       
+       // getSceneElements().getChildren().add(0,backView);
         getGameScene().getStylesheets().addAll(cssPath);
         primaryStage.setScene(getGameScene());
         
         Sprite[] s = {ship};
         getSpriteManager().addSprites(s);
-        getSceneElements().getChildren().add(0,ship.node);
- 
+        getSceneElements().getChildren().add(0,node);
+        getSceneElements().getChildren().add(ship.node);
+       
         // tworzenie asteroids
         //generateManySpheres(150);
         generateAsteroids();
@@ -117,7 +127,7 @@ public class AsteroidDemolition extends GameWorld {
 		            getSpriteManager().addSprites(s);
 		            
 		            // dodanie pocisku do listy spritow 
-		            getSceneElements().getChildren().add(0, m.node);
+		            getSceneElements().getChildren().add( m.node);
 					
 				d.x = primaryStage.getX() - event.getScreenX();
 				d.y = primaryStage.getY() - event.getScreenY();
@@ -169,9 +179,9 @@ public class AsteroidDemolition extends GameWorld {
             
             Sprite[] s = {ast};
             getSpriteManager().addSprites(s);
-            
+            ast.node.toFront();
             // add sprite's 
-            getSceneElements().getChildren().add(0, ast.node);
+            getSceneElements().getChildren().add(ast.node);
     	}
     	
     }

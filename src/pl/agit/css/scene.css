@@ -1,8 +1,11 @@
 @CHARSET "UTF-8";
 
-.scene {
-    -fx-background: red;
+.root {
+    -fx-background: rgb(225, 228, 203);
+     
     /* ... */
 }
+
+
 
 .hbox {-fx-background-color: #8fbc8f; -fx-padding: 15; -fx-spacing: 10;}
