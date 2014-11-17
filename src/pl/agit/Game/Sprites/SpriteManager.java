@@ -1,6 +1,8 @@
 package pl.agit.Game.Sprites;
 import java.util.*;
 
+import pl.agit.Game.Sprites.Characters.Asteroid;
+
 public class SpriteManager {
 	//aktualne elemnty znajdujace sie w grze
 	private final static List GAME_ACTORS = new ArrayList();
@@ -49,6 +51,8 @@ public class SpriteManager {
     public void resetCollisionsToCheck() {
         CHECK_COLLISION_LIST.clear();
         CHECK_COLLISION_LIST.addAll(GAME_ACTORS);
+       
+       // cleanupSprites();
     }
  
     //usuwanie i czyszczenie spritow z wszystkich podrecznych kolekcji
@@ -60,4 +64,18 @@ public class SpriteManager {
         // reset the clean up sprites
         CLEAN_UP_SPRITES.clear();
     }
-}
+    
+    public static int getCountAsteroids(){
+    	Iterator<Sprite> i = GAME_ACTORS.iterator();
+    	int z=0;
+    	while(i.hasNext()){
+    		
+    		if(i.next() instanceof Asteroid) z++;
+    		
+    	}
+    	
+    	return z;
+    	
+    }
+    
+   }

@@ -3,6 +3,7 @@ package pl.agit.Game.Sprites;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.agit.Game.World.GameWorld;
 import javafx.scene.Node;
 
 public abstract class Sprite {
@@ -26,5 +27,19 @@ public abstract class Sprite {
     // czy koliduje z innymi
     public boolean collide(Sprite other) {
         return false;
+    }
+    
+    public void handleDeath(GameWorld gm){
+    	Sprite[] s = {this};
+    	gm.getSpriteManager().addSpritesToBeRemoved(s);
+    }
+    
+    public void noImplode(final GameWorld gameWorld){
+		isDead = true;
+		gameWorld.getSceneElements().getChildren().remove(node);
+	}
+    
+    public boolean handleBoundsMeet(double wx, double hy){
+    	return false;
     }
 }

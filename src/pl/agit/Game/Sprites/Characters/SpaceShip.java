@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 import pl.agit.Game.Sprites.Sprite;
 
 public class SpaceShip extends Sprite{
@@ -26,6 +27,7 @@ public class SpaceShip extends Sprite{
      * A group contain all of the ship image view nodes.
      */
     private final Group shipBook = new Group();
+    double maxX, maxY;
     
     private KeyCode keyCode;
     
@@ -46,7 +48,9 @@ public class SpaceShip extends Sprite{
 		// TODO Auto-generated method stub
 		//EventHandler<MouseEvent> ev = getMouseMoveEvent();
 		//System.out.print("T");
+		if(mpozX>maxX-this.node.getBoundsInParent().getWidth()-50) mpozX=maxX-this.node.getBoundsInParent().getWidth()-50;
 		shipBook.setTranslateX(mpozX);
+		if(mpozY>maxY-this.node.getBoundsInParent().getHeight()) mpozY=maxY-this.node.getBoundsInParent().getHeight();
 		shipBook.setTranslateY(mpozY);
 		
 	}
@@ -59,7 +63,27 @@ public class SpaceShip extends Sprite{
 		
 	}
 	
+	public Circle getAsCircle() {
+		Circle c = new Circle(shipBook.getBoundsInLocal().getWidth()/2);
+		//c.setTranslateX(shipBook.getTranslateX());
+		//c.setTranslateY(shipBook.getTranslateY());
+		//System.out.println(c.getRadius());
+        return c;
+    }
 	
+	@Override
+	//obsluga kolizji ze scianami
+	public boolean handleBoundsMeet(double wx, double hy){
+		maxX=wx;
+		maxY=hy;
+		return false;
+    }
+	
+	public void stop(){
+		//System.out.println("Stop");
+		node.setTranslateX(mpozX-20);
+		node.setTranslateY(mpozY-20);
+	}
 	
 	public double getMpozX() {
 		return mpozX;

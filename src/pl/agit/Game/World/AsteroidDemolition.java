@@ -1,6 +1,8 @@
 package pl.agit.Game.World;
 
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.animation.Timeline;
 import javafx.event.Event;
@@ -23,6 +25,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import pl.agit.Game.Sprites.Sprite;
+import pl.agit.Game.Sprites.SpriteManager;
 import pl.agit.Game.Sprites.Characters.Asteroid;
 import pl.agit.Game.Sprites.Characters.Missile;
 import pl.agit.Game.Sprites.Characters.SpaceShip;
@@ -34,17 +37,15 @@ public class AsteroidDemolition extends GameWorld {
     private GameStats gameStats;
     
     private int asteroidCount = 0;
+    private int missileCount = 0;
     
     private SpaceShip ship = new SpaceShip();
  
     public AsteroidDemolition(int fps, String title){
         super(fps, title);
     }
- 
-    /**
-     * Initialize the game world by adding sprite objects.
-     * @param primaryStage
-     */
+    
+    
     @Override
     public void initialize(final Stage primaryStage) {
       
@@ -83,6 +84,11 @@ public class AsteroidDemolition extends GameWorld {
     }
     
     
+    
+    public void reductionMissile(){
+    	missileCount--;
+    }
+    
     private void setupInput(final Stage primaryStage){
     	
     	
@@ -110,15 +116,13 @@ public class AsteroidDemolition extends GameWorld {
 					Sprite[] s = {m};
 		            getSpriteManager().addSprites(s);
 		            
-		            // add sprite's 
+		            // dodanie pocisku do listy spritow 
 		            getSceneElements().getChildren().add(0, m.node);
 					
 				d.x = primaryStage.getX() - event.getScreenX();
 				d.y = primaryStage.getY() - event.getScreenY();
-				/*ship.setMpozX(event.getX());
-				ship.setMpozY(event.getY());
+				missileCount++;
 				
-				gameStats.updateMousePos(event.getX(), event.getY());*/
 				}
 			}
 			
@@ -142,12 +146,10 @@ public class AsteroidDemolition extends GameWorld {
     	
     }
  
-    /**
-     * Make some more space spheres (Atomic particles)
-     */
+    //generowanie asteroid
     private void generateAsteroids(){
     	Random random = new Random();
-    	int anumb = random.nextInt(10);
+    	int anumb = random.nextInt(9)+1;
     	asteroidCount = asteroidCount+anumb;
     	Scene scene= getGameScene();
     	for(int i=0;i<anumb;i++){
@@ -156,9 +158,9 @@ public class AsteroidDemolition extends GameWorld {
     		Asteroid ast = new Asteroid(10,new RadialGradient(0,.1,3,3,4,false,CycleMethod.REFLECT,new Stop(0, Color.RED),new Stop(1, Color.BLACK)));
     		Circle circle = ast.getAsCircle();
     		ast.vX=0;
-    		ast.vY=random.nextDouble()+3;
+    		ast.vY=random.nextDouble()+2;
     		double newX = random.nextInt((int) (scene.getWidth()-circle.getRadius()));
-    		double newY = circle.getRadius();
+    		double newY = 100;
     		
     		circle.setTranslateX(newX);
             circle.setTranslateY(newY);
@@ -216,56 +218,60 @@ public class AsteroidDemolition extends GameWorld {
         }
     }
  
-    /**
-     * Each sprite will update it's velocity and bounce off wall borders.
-     * @param sprite - An atomic particle (a sphere).
-     */
+    //uaktualnianie aktorow
     @Override
     protected void handleUpdate(Sprite sprite) {
+    	
+    	//int asterDel=0;
         if (sprite instanceof Asteroid) {
             Asteroid sphere = (Asteroid) sprite;
             
-            if (sphere.node.getTranslateY() > getGameScene().getHeight()-
-                    sphere.node.getBoundsInParent().getHeight() ) {
-                  //sphere.vY = sphere.vY * -1;
-              	  Sprite[] s = {sprite};
-              	  
-              	  ((Asteroid) sprite).noImplode(this);
-              	getSpriteManager().addSpritesToBeRemoved(s);
-              	asteroidCount--;
- 
-           
-            }
-            
+                 if(sphere.handleBoundsMeet(getGameScene().getWidth(), getGameScene().getHeight()-60))        	  
+                	 ((Asteroid) sprite).handleDeath(this);
+              	
         }
         
+        if(sprite instanceof Missile){
+        	 Missile sphere = (Missile) sprite;
+        	 if(sphere.handleBoundsMeet(getGameScene().getWidth(), getGameScene().getHeight()))        	  
+            	 
+              	((Missile) sprite).handleDeath(this);
+            
+            }
+       if(sprite instanceof SpaceShip){
+    	   SpaceShip sphere = (SpaceShip) sprite;
+    	   if(sphere.handleBoundsMeet(getGameScene().getWidth(), getGameScene().getHeight()-60)){
+    		   //sphere.stop();
+    		   //return;
+    	   }
+       }
        
-        sprite.update();
-        
+       sprite.update();
     }
     
     @Override
     protected void respawnElements(){
-    	 if(asteroidCount<5) generateAsteroids(); //dodawanie asteroid
+    	 asteroidCount = SpriteManager.getCountAsteroids();
+    	 if(asteroidCount==0) generateAsteroids(); //dodawanie asteroid
+    	 
     }
  
-    /**
-     * How to handle the collision of two sprite objects. Stops the particle
-     * by zeroing out the velocity if a collision occurred.
-     * @param spriteA
-     * @param spriteB
-     * @return
-     */
+    //kolizje dwoch obiektow
     @Override
     protected boolean handleCollision(Sprite spriteA, Sprite spriteB) {
-        if (spriteA.collide(spriteB)) {
-            ((Asteroid)spriteA).implode(this);
-            ((Asteroid)spriteB).implode(this);
-            Sprite[] s = {spriteA, spriteB};
-            getSpriteManager().addSpritesToBeRemoved(s);
-            return true;
-        }
-        return false;
+    	if (spriteA != spriteB) {
+    		
+    		        if (spriteA.collide(spriteB)) {
+    		            //if (spriteA != ship) {
+    		                spriteA.handleDeath(this);
+    		            //}
+    		            if (spriteB != ship ) {
+    		                spriteB.handleDeath(this);
+    		            }
+    		        }
+    		    }
+ 	
+    	return false;
     }
  
    //usuwanie zdechlych rzeczy z planszy
@@ -274,8 +280,9 @@ public class AsteroidDemolition extends GameWorld {
         // removes from the scene and backend store
         super.cleanupSprites();
      
-        gameStats.updateAsteroidCounter(getSpriteManager().getAllSprites().size());
- 
+        gameStats.updateAsteroidCounter(asteroidCount);
+        gameStats.updateMissileCounter( missileCount);
+        
     }
 
     private class Delta {double x; double y;};

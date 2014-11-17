@@ -2,6 +2,7 @@ package pl.agit.Game.Sprites.Characters;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import pl.agit.Game.Sprites.Sprite;
+import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
 
 public class Missile extends Sprite {
@@ -29,6 +30,22 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 		node.setTranslateY(node.getTranslateY()-vY);
 		
 	}
+	
+	public void handleDeath(GameWorld gm){
+		super.handleDeath(gm);
+		noImplode(gm);
+		((AsteroidDemolition)gm).reductionMissile();
+		
+	}
+	
+	public boolean handleBoundsMeet(double wx, double hy){
+		if (this.node.getTranslateY() <-this.node.getBoundsInParent().getHeight() ) {
+              
+          	  return true;
+                  
+        }
+		return false;
+    }
 	
 	public Circle getAsCircle() {
         return (Circle) node;
