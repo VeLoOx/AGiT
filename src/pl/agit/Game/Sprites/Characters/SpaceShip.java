@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import pl.agit.Game.Sprites.Sprite;
+import pl.agit.Game.World.GameWorld;
 
 public class SpaceShip extends Sprite{
 	
@@ -23,9 +24,8 @@ public class SpaceShip extends Sprite{
 	private double mpozX = 500;
 	private double mpozY = 500;
 	
-	/**
-     * A group contain all of the ship image view nodes.
-     */
+	private double energy=100;
+	
     private final Group shipBook = new Group();
     double maxX, maxY;
     
@@ -53,6 +53,14 @@ public class SpaceShip extends Sprite{
 		if(mpozY>maxY-this.node.getBoundsInParent().getHeight()) mpozY=maxY-this.node.getBoundsInParent().getHeight();
 		shipBook.setTranslateY(mpozY);
 		
+	}
+	
+	public void reducteEnergy(double dam){
+		energy=energy-dam;
+	}
+	
+	public double getEnergy(){
+		return energy;
 	}
 	
 	public Missile fire(){
@@ -100,6 +108,15 @@ public class SpaceShip extends Sprite{
 	public void setMpozY(double mpozY) {
 		this.mpozY = mpozY;
 	}
+	
+//	public boolean collide(Sprite s){
+//		this.reducteEnergy(s.getDamage());
+//		return false;
+//	}
+//	public void handleDeath(GameWorld gm){
+//    	//Sprite[] s = {this};
+//    	//gm.getSpriteManager().addSpritesToBeRemoved(s);
+//    }
 
 	/*public static void main(String[] args){
 		

@@ -16,6 +16,10 @@ public class GameStats {
 
 	private Label mousePos;
 	private Label mousePosName;
+	
+	private Label spaceEnergyCounter;
+	private Label spaceEnergyCounterName;
+
 
 	private double targetX;
 	private double targetY;
@@ -29,6 +33,9 @@ public class GameStats {
 
 		mousePos = new Label("X = 0 -- Y = 0");
 		mousePosName = new Label("Mouse Pos:");
+		
+		spaceEnergyCounter = new Label("0");
+		spaceEnergyCounterName = new Label("Ship ENERGY:");
 
 		asteroidCounter.getStyleClass().add(".ac {-fx-font-size: 30pt;}");
 
@@ -51,6 +58,11 @@ public class GameStats {
 	public void updateMissileCounter(int val) {
 		missileCounter.setText(Integer.toString(val));
 	}
+	
+	public void updateSpaceEnergyCounter(double val) {
+
+		spaceEnergyCounter.setText(Double.toString(val));
+	}
 
 	public VBox getStats() {
 
@@ -70,6 +82,8 @@ public class GameStats {
 		hstatus.getChildren().add(missileCounter);
 		hstatus.getChildren().add(mousePosName);
 		hstatus.getChildren().add(mousePos);
+		hstatus.getChildren().add(spaceEnergyCounterName);
+		hstatus.getChildren().add(spaceEnergyCounter);
 
 		stats.getChildren().add(hstatus);
 

@@ -67,6 +67,11 @@ public class Asteroid extends Sprite {
 	}
 	
 	@Override
+	public double getDamage(){
+		return 10;
+	}
+	
+	@Override
     public boolean collide(Sprite other) {
         if (other instanceof Asteroid) {
             return collide((Asteroid)other);

@@ -42,4 +42,12 @@ public abstract class Sprite {
     public boolean handleBoundsMeet(double wx, double hy){
     	return false;
     }
+    
+    public double getDamage(){
+    	return 0;
+    }
+    
+    public void setDamage(double val){
+    	
+    }
 }

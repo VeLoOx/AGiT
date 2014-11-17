@@ -262,12 +262,15 @@ public class AsteroidDemolition extends GameWorld {
     	if (spriteA != spriteB) {
     		
     		        if (spriteA.collide(spriteB)) {
-    		            //if (spriteA != ship) {
+    		           //if (spriteA != ship) {
     		                spriteA.handleDeath(this);
     		            //}
     		            if (spriteB != ship ) {
     		                spriteB.handleDeath(this);
-    		            }
+    		           }
+    		            if (spriteB == ship ) {
+    		                ship.reducteEnergy(spriteA.getDamage());
+    		           }
     		        }
     		    }
  	
@@ -282,6 +285,7 @@ public class AsteroidDemolition extends GameWorld {
      
         gameStats.updateAsteroidCounter(asteroidCount);
         gameStats.updateMissileCounter( missileCount);
+        gameStats.updateSpaceEnergyCounter(ship.getEnergy());
         
     }
 
