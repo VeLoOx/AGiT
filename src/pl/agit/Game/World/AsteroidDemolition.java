@@ -67,7 +67,7 @@ public class AsteroidDemolition extends GameWorld {
         // tworzenie asteroids
         //generateManySpheres(150);
         generateAsteroids();
- 
+  
         // Display the number of spheres visible.
         // Create a button to add more spheres.
         // Create a button to freeze the game loop.
