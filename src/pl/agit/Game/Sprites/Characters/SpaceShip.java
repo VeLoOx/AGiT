@@ -1,5 +1,8 @@
 package pl.agit.Game.Sprites.Characters;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -9,90 +12,105 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.World.GameWorld;
 
-public class SpaceShip extends Sprite{
-	
-	//milisekundy na klatke
+public class SpaceShip extends Sprite {
+
+	// milisekundy na klatke
 	private final static float MILLIS_PER_FRAME = 3000;
-	
+
 	private final static float SPEED = 3.3f;
-	
+
 	private final static float MISSILE_SPEED = 5.3f;
-	
+
 	private double mpozX = 500;
 	private double mpozY = 500;
-	
-	private double energy=100;
-	
-    private final Group shipBook = new Group();
-    double maxX, maxY;
-    
-    private KeyCode keyCode;
-    
-    public SpaceShip(){
-    	
-    	Image shipImage = new Image("/GameGfxFiles/ship.png");
-    	ImageView shipView = new ImageView(shipImage);
-    	shipBook.getChildren().addAll(shipView);
-    	
-    	shipBook.setTranslateX(100);
-    	shipBook.setTranslateY(100);
-    	node = shipBook;
-    	
-    }
+
+	private double energy = 100;
+
+	private final Group shipBook = new Group();
+	double maxX, maxY;
+
+	private KeyCode keyCode;
+
+	private SoundManager sm = SoundManager.getSoundManager(1);
+
+	public SpaceShip() {
+
+		Image shipImage = new Image("/GameGfxFiles/ship.png");
+		ImageView shipView = new ImageView(shipImage);
+		try {
+			sm.loadSoundEffects("laser", new File(
+					"F:/kod/Java/testfx/bin/GameGfxFiles/laser.mp3").toURL());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		shipBook.getChildren().addAll(shipView);
+
+		shipBook.setTranslateX(100);
+		shipBook.setTranslateY(100);
+		node = shipBook;
+
+	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		//EventHandler<MouseEvent> ev = getMouseMoveEvent();
-		//System.out.print("T");
-		if(mpozX>maxX-this.node.getBoundsInParent().getWidth()-50) mpozX=maxX-this.node.getBoundsInParent().getWidth()-50;
+		// EventHandler<MouseEvent> ev = getMouseMoveEvent();
+		// System.out.print("T");
+		if (mpozX > maxX - this.node.getBoundsInParent().getWidth() - 50)
+			mpozX = maxX - this.node.getBoundsInParent().getWidth() - 50;
 		shipBook.setTranslateX(mpozX);
-		if(mpozY>maxY-this.node.getBoundsInParent().getHeight()) mpozY=maxY-this.node.getBoundsInParent().getHeight();
+		if (mpozY > maxY - this.node.getBoundsInParent().getHeight())
+			mpozY = maxY - this.node.getBoundsInParent().getHeight();
 		shipBook.setTranslateY(mpozY);
-		
+
 	}
-	
-	public void reducteEnergy(double dam){
-		energy=energy-dam;
+
+	public void reducteEnergy(double dam) {
+		energy = energy - dam;
 	}
-	
-	public double getEnergy(){
+
+	public double getEnergy() {
 		return energy;
 	}
-	
-	public Missile fire(){
-		
-		Missile m = new Missile(10,mpozX+shipBook.getChildren().get(0).getBoundsInLocal().getWidth()/2,mpozY,0,4);
-		
+
+	public Missile fire() {
+
+		Missile m = new Missile(10, mpozX
+				+ shipBook.getChildren().get(0).getBoundsInLocal().getWidth()
+				/ 2, mpozY, 0, 4);
+		sm.playSound("laser");
+
 		return m;
-		
+
 	}
-	
+
 	public Circle getAsCircle() {
-		Circle c = new Circle(shipBook.getBoundsInLocal().getWidth()/2);
-		//c.setTranslateX(shipBook.getTranslateX());
-		//c.setTranslateY(shipBook.getTranslateY());
-		//System.out.println(c.getRadius());
-        return c;
-    }
-	
-	@Override
-	//obsluga kolizji ze scianami
-	public boolean handleBoundsMeet(double wx, double hy){
-		maxX=wx;
-		maxY=hy;
-		return false;
-    }
-	
-	public void stop(){
-		//System.out.println("Stop");
-		node.setTranslateX(mpozX-20);
-		node.setTranslateY(mpozY-20);
+		Circle c = new Circle(shipBook.getBoundsInLocal().getWidth() / 2);
+		// c.setTranslateX(shipBook.getTranslateX());
+		// c.setTranslateY(shipBook.getTranslateY());
+		// System.out.println(c.getRadius());
+		return c;
 	}
-	
+
+	@Override
+	// obsluga kolizji ze scianami
+	public boolean handleBoundsMeet(double wx, double hy) {
+		maxX = wx;
+		maxY = hy;
+		return false;
+	}
+
+	public void stop() {
+		// System.out.println("Stop");
+		node.setTranslateX(mpozX - 20);
+		node.setTranslateY(mpozY - 20);
+	}
+
 	public double getMpozX() {
 		return mpozX;
 	}
@@ -108,20 +126,22 @@ public class SpaceShip extends Sprite{
 	public void setMpozY(double mpozY) {
 		this.mpozY = mpozY;
 	}
-	
-//	public boolean collide(Sprite s){
-//		this.reducteEnergy(s.getDamage());
-//		return false;
-//	}
-//	public void handleDeath(GameWorld gm){
-//    	//Sprite[] s = {this};
-//    	//gm.getSpriteManager().addSpritesToBeRemoved(s);
-//    }
 
-	/*public static void main(String[] args){
-		
-		
-		
-	}*/
+	// public boolean collide(Sprite s){
+	// this.reducteEnergy(s.getDamage());
+	// return false;
+	// }
+	// public void handleDeath(GameWorld gm){
+	// //Sprite[] s = {this};
+	// //gm.getSpriteManager().addSpritesToBeRemoved(s);
+	// }
+
+	/*
+	 * public static void main(String[] args){
+	 * 
+	 * 
+	 * 
+	 * }
+	 */
 
 }

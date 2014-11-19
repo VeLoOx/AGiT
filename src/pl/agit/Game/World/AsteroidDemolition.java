@@ -30,6 +30,8 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.Sprites.SpriteManager;
 import pl.agit.Game.Sprites.Characters.Asteroid;
@@ -44,11 +46,13 @@ public class AsteroidDemolition extends GameWorld {
     
     private int asteroidCount = 0;
     private int missileCount = 0;
-    Image backgroundImage = new Image("/GameGfxFiles/space2.jpg");
+    Image backgroundImage = new Image("/GameGfxFiles/space.jpg");
     ImageView backView = new ImageView(backgroundImage);
     Group g = new Group();
     
     private SpaceShip ship = new SpaceShip();
+    
+    SoundManager sm=SoundManager.getSoundManager(1);
  
     public AsteroidDemolition(int fps, String title){
         super(fps, title);
@@ -94,10 +98,10 @@ public class AsteroidDemolition extends GameWorld {
         
         setupInput(primaryStage);
         
-        String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
+       /* String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
 	    Media sound = new Media(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
 	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-	    mediaPlayer.play();
+	    mediaPlayer.play();*/
         
     }
     
@@ -112,6 +116,13 @@ public class AsteroidDemolition extends GameWorld {
     	
     	final Delta d = new Delta();
     	double dy;
+    	
+    	primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+            	sm.shutdown();
+                System.out.println("Stage is closing");
+            }
+        });    
     	
     	//samo poruszanie
     	EventHandler moveMouseEv = new EventHandler<MouseEvent>(){
