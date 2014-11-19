@@ -20,8 +20,10 @@ public class MyTest {
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 		engine.eval(new FileReader("D:/Studia/przedmioty2_2/AGiT/proj/JSProject/test.js"));
 		
-		Invocable invocable = (Invocable) engine;
+		Invocable invocable1 = (Invocable) engine;
 		
+		engine.eval(new FileReader("D:/Studia/przedmioty2_2/AGiT/proj/JSProject/test2.js"));
+		Invocable invocable2 = (Invocable) engine;
 		
 //		final AudioClip sound = new AudioClip(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
 //		
@@ -35,10 +37,10 @@ public class MyTest {
 		
 //		
 
-		String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
-	    Media sound = new Media(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
-	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-	    mediaPlayer.play();
+//		String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
+//	    Media sound = new Media(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
+//	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+//	    mediaPlayer.play();
 		
 		System.out.println("aaa");
 	
@@ -52,9 +54,12 @@ public class MyTest {
 //		Object[] o = new Object[1];
 //		o[0] = p;
 //		
-//		Object result = invocable.invokeFunction("fun3", o);
-//		System.out.println(p.getX());
-//		System.out.println(((Point) result).getX());
+		String d = "GRZESIEK";
+		invocable1.invokeFunction("fun2", d);
+		invocable2.invokeFunction("fun4", d);
+		invocable1.invokeFunction("fun2", d);
+		//System.out.println(p.getX());
+		//System.out.println(((Point) result).getX());
 	
 	}
 }

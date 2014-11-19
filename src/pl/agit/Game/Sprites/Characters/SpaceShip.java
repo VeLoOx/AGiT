@@ -92,9 +92,6 @@ public class SpaceShip extends Sprite {
 
 	public Circle getAsCircle() {
 		Circle c = new Circle(shipBook.getBoundsInLocal().getWidth() / 2);
-		// c.setTranslateX(shipBook.getTranslateX());
-		// c.setTranslateY(shipBook.getTranslateY());
-		// System.out.println(c.getRadius());
 		return c;
 	}
 

@@ -98,10 +98,7 @@ public class AsteroidDemolition extends GameWorld {
         
         setupInput(primaryStage);
         
-       /* String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
-	    Media sound = new Media(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
-	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
-	    mediaPlayer.play();*/
+      
         
     }
     
