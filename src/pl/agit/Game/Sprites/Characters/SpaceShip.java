@@ -41,13 +41,14 @@ public class SpaceShip extends Sprite {
 
 		Image shipImage = new Image("/GameGfxFiles/ship.png");
 		ImageView shipView = new ImageView(shipImage);
-		try {
+		/*try {
 			sm.loadSoundEffects("laser", new File(
 					"F:/kod/Java/testfx/bin/GameGfxFiles/laser.mp3").toURL());
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		sm.loadSoundEffects("laser",getClass().getClassLoader().getResource("GameGfxFiles/laser.mp3"));
 		shipBook.getChildren().addAll(shipView);
 
 		shipBook.setTranslateX(100);
