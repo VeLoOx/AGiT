@@ -1,5 +1,6 @@
 package pl.agit.Game.World;
 
+import java.io.File;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,6 +21,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBoxBuilder;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -41,7 +44,7 @@ public class AsteroidDemolition extends GameWorld {
     
     private int asteroidCount = 0;
     private int missileCount = 0;
-    Image backgroundImage = new Image("/GameGfxFiles/space.jpg");
+    Image backgroundImage = new Image("/GameGfxFiles/space2.jpg");
     ImageView backView = new ImageView(backgroundImage);
     Group g = new Group();
     
@@ -90,6 +93,11 @@ public class AsteroidDemolition extends GameWorld {
         
         
         setupInput(primaryStage);
+        
+        String ssound = "D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3";
+	    Media sound = new Media(new File("D:\\Studia\\przedmioty2_2\\AGiT\\proj\\JavaProject\\bin\\GameGfxFiles\\m1.mp3").toURI().toString());
+	    MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	    mediaPlayer.play();
         
     }
     
