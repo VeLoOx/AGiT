@@ -1,20 +1,18 @@
 package pl.agit.Game.Sprites.Characters;
 
-import java.io.File;
-import java.net.MalformedURLException;
+import java.io.FileNotFoundException;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+
+import javax.script.ScriptException;
+
+import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
-import pl.agit.Game.World.GameWorld;
 
 public class SpaceShip extends Sprite {
 
@@ -36,24 +34,28 @@ public class SpaceShip extends Sprite {
 	private KeyCode keyCode;
 
 	private SoundManager sm = SoundManager.getSoundManager(1);
+	ScriptManager scrm = ScriptManager.getScriptManager();
 
 	public SpaceShip() {
 
 		Image shipImage = new Image("/GameGfxFiles/ship.png");
 		ImageView shipView = new ImageView(shipImage);
-		/*try {
-			sm.loadSoundEffects("laser", new File(
-					"F:/kod/Java/testfx/bin/GameGfxFiles/laser.mp3").toURL());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		
 		sm.loadSoundEffects("laser",getClass().getClassLoader().getResource("GameGfxFiles/laser.mp3"));
 		shipBook.getChildren().addAll(shipView);
 
 		shipBook.setTranslateX(100);
 		shipBook.setTranslateY(100);
 		node = shipBook;
+		
+		//skrypty
+		
+		try {
+			scrm.addScript("ship", "/GameScripts/Ship.js");
+		} catch (ScriptException | FileNotFoundException e) {
+			System.out.println("blad skryptu");
+			e.printStackTrace();
+		}
 
 	}
 
@@ -72,7 +74,17 @@ public class SpaceShip extends Sprite {
 	}
 
 	public void reducteEnergy(double dam) {
-		energy = energy - dam;
+		//wywolanie skryptowe
+		Object[] o = {energy,dam};
+		try {
+			energy = (double) scrm.getScript("ship").invokeFunction("reduceEnergy", o);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public double getEnergy() {
@@ -81,9 +93,21 @@ public class SpaceShip extends Sprite {
 
 	public Missile fire() {
 
-		Missile m = new Missile(10, mpozX
-				+ shipBook.getChildren().get(0).getBoundsInLocal().getWidth()
-				/ 2, mpozY, 0, 4);
+//		Missile m = new Missile(10, mpozX
+//				+ shipBook.getChildren().get(0).getBoundsInLocal().getWidth()
+//				/ 2, mpozY, 0, 4);
+		
+		Object[] o = {mpozX,mpozY,shipBook.getChildren().get(0).getBoundsInLocal().getWidth()};
+		Missile m=null;
+		try {
+			m = (Missile) scrm.getScript("ship").invokeFunction("fire", o);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		sm.playSound("laser");
 
 		return m;
