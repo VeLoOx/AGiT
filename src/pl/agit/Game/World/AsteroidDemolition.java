@@ -1,6 +1,8 @@
 package pl.agit.Game.World;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,6 +33,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.Sprites.SpriteManager;
@@ -46,16 +49,31 @@ public class AsteroidDemolition extends GameWorld {
     
     private int asteroidCount = 0;
     private int missileCount = 0;
-    Image backgroundImage = new Image("/GameGfxFiles/space.jpg");
-    ImageView backView = new ImageView(backgroundImage);
+    Image backgroundImage;
+    ImageView backView;
     Group g = new Group();
     
     private SpaceShip ship = new SpaceShip();
     
     SoundManager sm=SoundManager.getSoundManager(1);
  
-    public AsteroidDemolition(int fps, String title){
+    public AsteroidDemolition(int fps, String title){   
         super(fps, title);
+        
+        //GRAFIKA
+        String dir = new File("").getAbsolutePath(); //znalezienie sciaki bezwzglednej do projektu
+		
+		URL u=null;
+		try {
+			u = new File(dir+GameConst.GFX_MAINSPACE).toURI().toURL();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+        backgroundImage = new Image(u.toExternalForm());
+        backView = new ImageView(backgroundImage);
     }
     
     

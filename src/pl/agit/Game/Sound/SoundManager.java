@@ -1,4 +1,6 @@
 package pl.agit.Game.Sound;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +31,20 @@ public class SoundManager {
 	    }
 
 	   
-	    public void loadSoundEffects(String id, URL url) {
-	        AudioClip sound = new AudioClip(url.toExternalForm());
+	    public void loadSoundEffects(String id,String path) {
+	    	
+	    	String dirPath = new File("").getAbsolutePath(); //znalezienie sciaki bezwzglednej do projektu
+	    		    		    
+	    	URL u=null;
+			try {
+				u = new File(dirPath+path).toURI().toURL();
+			} catch (MalformedURLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+	    	
+	        AudioClip sound = new AudioClip(u.toExternalForm());
 	        soundEffectsMap.put(id, sound);
 	    }
 

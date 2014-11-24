@@ -1,6 +1,9 @@
 package pl.agit.Game.Sprites.Characters;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -10,11 +13,12 @@ import javafx.scene.shape.Circle;
 
 import javax.script.ScriptException;
 
+import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 
-public class SpaceShip extends Sprite {
+public class SpaceShip extends Sprite implements GameConst {
 
 	// milisekundy na klatke
 	private final static float MILLIS_PER_FRAME = 3000;
@@ -38,24 +42,37 @@ public class SpaceShip extends Sprite {
 
 	public SpaceShip() {
 
-		Image shipImage = new Image("/GameGfxFiles/ship.png");
+		//GRAFIKA
+		String dir = new File("").getAbsolutePath(); //znalezienie sciaki bezwzglednej do projektu
+		System.out.println(dir+GameConst.GFX_MAINSHIP);
+		URL u=null;
+		try {
+			u = new File(dir+GameConst.GFX_MAINSHIP).toURI().toURL();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Image shipImage = new Image(u.toExternalForm());
 		ImageView shipView = new ImageView(shipImage);
 		
-		sm.loadSoundEffects("laser",getClass().getClassLoader().getResource("GameGfxFiles/laser.mp3"));
+		
 		shipBook.getChildren().addAll(shipView);
-
 		shipBook.setTranslateX(100);
 		shipBook.setTranslateY(100);
 		node = shipBook;
 		
-		//skrypty
+		//SKRYPTY
 		
 		try {
-			scrm.addScript("ship", "/GameScripts/Ship.js");
+			scrm.addScript(GameConst.JS_MAINSHIP_NAME, GameConst.JS_MAINSHIP);
 		} catch (ScriptException | FileNotFoundException e) {
 			System.out.println("blad skryptu");
 			e.printStackTrace();
 		}
+		
+		
+		//DZWIEKI
+		sm.loadSoundEffects(GameConst.A_MAINSHIP_LASER_NAME,GameConst.A_MAINSHIP_LASER);
 
 	}
 
@@ -76,8 +93,9 @@ public class SpaceShip extends Sprite {
 	public void reducteEnergy(double dam) {
 		//wywolanie skryptowe
 		Object[] o = {energy,dam};
+		
 		try {
-			energy = (double) scrm.getScript("ship").invokeFunction("reduceEnergy", o);
+			energy = (double) scrm.getScript(GameConst.JS_MAINSHIP_NAME).invokeFunction("reduceEnergy", o);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,8 +117,9 @@ public class SpaceShip extends Sprite {
 		
 		Object[] o = {mpozX,mpozY,shipBook.getChildren().get(0).getBoundsInLocal().getWidth()};
 		Missile m=null;
+		
 		try {
-			m = (Missile) scrm.getScript("ship").invokeFunction("fire", o);
+			m = (Missile) scrm.getScript(GameConst.JS_MAINSHIP_NAME).invokeFunction("fire", o);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
