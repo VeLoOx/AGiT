@@ -47,6 +47,12 @@ public class Asteroid extends Sprite {
 		node = sphere;	
 	}
 	
+	public Asteroid(double radius, String color){
+		this(radius);
+		sphere.setFill(Color.valueOf(color));
+		node = sphere;
+	}
+	
 	public Circle createAsteroid(double radius, LinearGradient color){
 		Circle sphere = new Circle();
 		sphere.setCenterX(radius);
