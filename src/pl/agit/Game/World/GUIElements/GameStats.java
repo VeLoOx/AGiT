@@ -19,12 +19,20 @@ public class GameStats {
 	
 	private Label spaceEnergyCounter;
 	private Label spaceEnergyCounterName;
+	
+	private Label spaceScoreCounter;
+	private Label spaceScoreCounterName;
+	
+	private Label spaceLevelCounter;
+	private Label spaceLevelCounterName;
 
 
 	private double targetX;
 	private double targetY;
+	
+	private VBox stats = new VBox();
 
-	public GameStats(int sizeX, int sizeY) {
+	public GameStats(double sizeX, double sizeY) {
 		asteroidCounter = new Label("0");
 		asteroidCounterName = new Label("Asteroids COUNTER:");
 
@@ -36,6 +44,12 @@ public class GameStats {
 		
 		spaceEnergyCounter = new Label("0");
 		spaceEnergyCounterName = new Label("Ship ENERGY:");
+		
+		spaceScoreCounter = new Label("0");
+		spaceScoreCounterName = new Label("Ship SCORE:");
+		
+		spaceLevelCounter = new Label("0");
+		spaceLevelCounterName = new Label("Ship LEVEL:");
 
 		asteroidCounter.getStyleClass().add(".ac {-fx-font-size: 30pt;}");
 
@@ -63,16 +77,30 @@ public class GameStats {
 
 		spaceEnergyCounter.setText(Double.toString(val));
 	}
+	
+	public void updateSpaceScoreCounter(double val) {
+
+		spaceScoreCounter.setText(Double.toString(val));
+	}
+	
+	public void updateSpaceLevelCounter(double val) {
+
+		spaceLevelCounter.setText(Double.toString(val));
+	}
+	
+	public VBox getVBox(){
+		return stats;
+	}
 
 	public VBox getStats() {
 
-		VBox stats = new VBox();
+		
 
 		// stats.setBorder(new Border(new BorderStroke));
 		// stats.setSpacing(5);
 		// stats.setBackground(new Background(new BackgroundFill));
-		stats.setTranslateX(targetX);
-		stats.setTranslateY(targetY);
+		stats.setTranslateX(20);
+		stats.setTranslateY(20);
 
 		HBox hstatus = new HBox();
 		hstatus.getStyleClass().add("hbox");
@@ -84,6 +112,10 @@ public class GameStats {
 		hstatus.getChildren().add(mousePos);
 		hstatus.getChildren().add(spaceEnergyCounterName);
 		hstatus.getChildren().add(spaceEnergyCounter);
+		hstatus.getChildren().add(spaceScoreCounterName);
+		hstatus.getChildren().add(spaceScoreCounter);
+		hstatus.getChildren().add(spaceLevelCounterName);
+		hstatus.getChildren().add(spaceLevelCounter);
 
 		stats.getChildren().add(hstatus);
 

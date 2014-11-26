@@ -25,7 +25,11 @@ public abstract class Sprite {
     public abstract void update();
  
     // czy koliduje z innymi
-    public boolean collide(Sprite other) {
+//    public boolean collide(Sprite other) {
+//        return false;
+//    }
+    
+    public boolean collide(Sprite other, GameWorld gm) {
         return false;
     }
     

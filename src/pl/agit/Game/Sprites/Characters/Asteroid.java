@@ -1,14 +1,23 @@
 package pl.agit.Game.Sprites.Characters;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javafx.animation.FadeTransitionBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
+import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
@@ -18,17 +27,38 @@ public class Asteroid extends Sprite {
 	
 	private Circle asteroid;
 	Circle sphere;
+	private final Group astBook = new Group();
+	private double radius;
 	
 	private Asteroid(double radius) {
 		
 		sphere = new Circle();
-		sphere.setCenterX(radius);
-		sphere.setCenterY(radius);
+		//sphere.setCenterX(radius);
+		//sphere.setCenterY(radius);
+		
+		
+		String dir = new File("").getAbsolutePath(); //znalezienie sciaki bezwzglednej do projektu
+		//System.out.println(dir+GameConst.GFX_ASTEROID);
+		URL u=null;
+		try {
+			u = new File(dir+GameConst.GFX_ASTEROID).toURI().toURL();
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Image astImage = new Image(u.toExternalForm(),radius*2,radius*2,false,false);
+		ImageView astView = new ImageView(astImage);
+		
+		//astView.setScaleX(1/(radius));
+		//astView.setScaleY(1/(radius));
+		astBook.getChildren().addAll(astView);
+		
+		this.radius = radius;
 		sphere.setRadius(radius);
 		
 		
 		
-		node = sphere;	
+		node = astBook;	
 	}
 	
 	public Asteroid(double radius, RadialGradient color){
@@ -36,32 +66,32 @@ public class Asteroid extends Sprite {
 		
 		sphere.setFill(color);
 		
-		node = sphere;	
+		//node = sphere;	
 	}
+	
+	
 	
 	public Asteroid(double radius, LinearGradient color){
 		this(radius);
 		
 		sphere.setFill(color);
 		
-		node = sphere;	
+		//node = sphere;	
 	}
 	
 	public Asteroid(double radius, String color){
 		this(radius);
 		sphere.setFill(Color.valueOf(color));
-		node = sphere;
+		//node = sphere;
 	}
 	
-	public Circle createAsteroid(double radius, LinearGradient color){
-		Circle sphere = new Circle();
-		sphere.setCenterX(radius);
-		sphere.setCenterY(radius);
-		sphere.setRadius(radius);
-		
-		//sphere.setFill(LinearGradient.valueOf("linear-gradient(from 0% 0% to 100% 100%, red  100% , blue 1%,  black 10%)"));
-		
-		return sphere;
+
+	
+	public Node getAsNode(){
+		return node;
+	}
+	public double getRadius(){
+		return radius;
 	}
 
 	@Override
@@ -70,6 +100,11 @@ public class Asteroid extends Sprite {
 		// TODO Auto-generated method stub
 		node.setTranslateX(node.getTranslateX() + vX);
         node.setTranslateY(node.getTranslateY() + vY);
+        
+        System.out.println("NODE: X="+node.getTranslateX()+"  Y: "+node.getTranslateY() + "WIDHT = "+node.getBoundsInLocal().getWidth());
+        Circle c = getAsCircle();
+        System.out.println("CIRC: X="+c.getTranslateX()+"  Y: "+c.getTranslateY() + "WIDHT = "+c.getBoundsInLocal().getWidth());
+        
 	}
 	
 	@Override
@@ -78,12 +113,14 @@ public class Asteroid extends Sprite {
 	}
 	
 	@Override
-    public boolean collide(Sprite other) {
+    public boolean collide(Sprite other,GameWorld gm) {
         if (other instanceof Asteroid) {
             return collide((Asteroid)other);
         }
         if (other instanceof Missile) {
-            return collide((Missile)other);
+           boolean val =  collide((Missile)other);
+           if(val) ((AsteroidDemolition)gm).addScore(50);
+           return val;
         }
         if (other instanceof SpaceShip) {
             return collide((SpaceShip)other);
@@ -112,20 +149,14 @@ public class Asteroid extends Sprite {
         double distance = Math.sqrt( dx * dx + dy * dy );
         double minDist  = otherSphere.getRadius() + thisSphere.getRadius() + 3;
  
-        return (distance < minDist);
+        boolean val = (distance < minDist);
+        
+        //if(val) isDead=true;
+        
+        return val;
     }
 
-	@Override
-	//obsluga kolizji ze scianami
-	public boolean handleBoundsMeet(double wx, double hy){
-		if (this.node.getTranslateY() > hy-this.node.getBoundsInParent().getHeight() ) {
-              
-          	  return true;
-                  
-        }
-		return false;
-    }
-	
+		
 	private boolean collide(Asteroid other) {
 		 
         // //jesli ukryty to nie koliduje
@@ -164,12 +195,26 @@ public class Asteroid extends Sprite {
         return (distance < minDist);
     }
 	
+	@Override
+	//obsluga kolizji ze scianami
+	public boolean handleBoundsMeet(double wx, double hy){
+		if (this.node.getTranslateY() > hy-this.node.getBoundsInParent().getHeight() ) {
+              isDead=true;
+          	  return true;
+                  
+        }
+		return false;
+    }
+	
 	public Circle getAsCircle() {
-        return (Circle) node;
+		sphere.setTranslateX(node.getTranslateX()+node.getBoundsInLocal().getWidth()/2);
+		sphere.setTranslateY(node.getTranslateY());
+        return sphere;
     }
 	
 	public void handleDeath(GameWorld gm){
 		//System.out.print("T");
+		
 		noImplode(gm);
 		
 		super.handleDeath(gm);

@@ -1,20 +1,20 @@
 
 var generateAsteroid1 = function(sceneWidth){
 	var ASTEROID = Java.type("pl.agit.Game.Sprites.Characters.Asteroid");
-	var ast = new ASTEROID(getRandomInt(5, 10),"red");
+	var ast = new ASTEROID(getRandomInt(5, 21),"red");
 	
 	var CIRCLE = Java.type("javafx.scene.shape.Circle");
-	var circle = ast.getAsCircle();
+	var node = ast.getAsNode();
 	
 	ast.vX = 0;
 	ast.vY = getRandomArbitrary(1, 7);
-	newX = getRandomInt(circle.getRadius(), (sceneWidth - circle.getRadius()));
+	newX = getRandomInt(50, (sceneWidth - ast.getRadius()));
 	newY = 10;
 
-	circle.setTranslateX(newX);
-	circle.setTranslateY(newY);
-	circle.setVisible(true);
-	circle.setId(ast.toString());
+	node.setTranslateX(newX);
+	node.setTranslateY(newY);
+	node.setVisible(true);
+//	circle.setId(ast.toString());
 	
 	return ast;
 	

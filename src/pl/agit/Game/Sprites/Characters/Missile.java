@@ -35,6 +35,8 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 		super.handleDeath(gm);
 		noImplode(gm);
 		((AsteroidDemolition)gm).reductionMissile();
+		//((AsteroidDemolition)gm).addScore(100);
+		
 		
 	}
 	

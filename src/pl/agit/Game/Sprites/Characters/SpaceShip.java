@@ -20,23 +20,20 @@ import pl.agit.Game.Sprites.Sprite;
 
 public class SpaceShip extends Sprite implements GameConst {
 
-	// milisekundy na klatke
-	private final static float MILLIS_PER_FRAME = 3000;
-
-	private final static float SPEED = 3.3f;
-
-	private final static float MISSILE_SPEED = 5.3f;
-
+	private int LEVEL_UPGRADE_JUMP = 2;
+	
 	private double mpozX = 500;
 	private double mpozY = 500;
 
 	private double energy = 100;
+	private int score = 0;
+	private int level = 0;
+	private int previousLevelScore=0;
 
 	private final Group shipBook = new Group();
 	double maxX, maxY;
 
-	private KeyCode keyCode;
-
+	
 	private SoundManager sm = SoundManager.getSoundManager(1);
 	ScriptManager scrm = ScriptManager.getScriptManager();
 
@@ -81,17 +78,30 @@ public class SpaceShip extends Sprite implements GameConst {
 		// TODO Auto-generated method stub
 		// EventHandler<MouseEvent> ev = getMouseMoveEvent();
 		// System.out.print("T");
-		if (mpozX > maxX - this.node.getBoundsInParent().getWidth() - 50)
-			mpozX = maxX - this.node.getBoundsInParent().getWidth() - 50;
+		if (mpozX > maxX - this.node.getBoundsInParent().getWidth())
+			mpozX = maxX - this.node.getBoundsInParent().getWidth();
 		shipBook.setTranslateX(mpozX);
 		if (mpozY > maxY - this.node.getBoundsInParent().getHeight())
 			mpozY = maxY - this.node.getBoundsInParent().getHeight();
 		shipBook.setTranslateY(mpozY);
-
+		
+	}
+	
+	private void levelUpdate(int sc){
+		//upgrade levela
+		if (sc==100){
+			previousLevelScore=sc;
+			level++;
+		} else
+		
+		if(sc==(previousLevelScore*LEVEL_UPGRADE_JUMP)){
+			previousLevelScore=sc;
+			level++;
+		} 
 	}
 
 	public void reducteEnergy(double dam) {
-		//wywolanie skryptowe
+		//wywolanie skryptowe redulcji energii
 		Object[] o = {energy,dam};
 		
 		try {
@@ -104,16 +114,24 @@ public class SpaceShip extends Sprite implements GameConst {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addScore(int val){
+		score=score+val;
+		levelUpdate(score);
+	}
 
 	public double getEnergy() {
 		return energy;
 	}
+	public double getScore(){
+		return score;
+	}
+	public int getLevel(){
+		return level;
+	}
 
 	public Missile fire() {
 
-//		Missile m = new Missile(10, mpozX
-//				+ shipBook.getChildren().get(0).getBoundsInLocal().getWidth()
-//				/ 2, mpozY, 0, 4);
 		
 		Object[] o = {mpozX,mpozY,shipBook.getChildren().get(0).getBoundsInLocal().getWidth()};
 		Missile m=null;
@@ -146,11 +164,11 @@ public class SpaceShip extends Sprite implements GameConst {
 		return false;
 	}
 
-	public void stop() {
-		// System.out.println("Stop");
-		node.setTranslateX(mpozX - 20);
-		node.setTranslateY(mpozY - 20);
-	}
+//	public void stop() {
+//		// System.out.println("Stop");
+//		node.setTranslateX(mpozX - 20);
+//		node.setTranslateY(mpozY - 20);
+//	}
 
 	public double getMpozX() {
 		return mpozX;
@@ -168,14 +186,7 @@ public class SpaceShip extends Sprite implements GameConst {
 		this.mpozY = mpozY;
 	}
 
-	// public boolean collide(Sprite s){
-	// this.reducteEnergy(s.getDamage());
-	// return false;
-	// }
-	// public void handleDeath(GameWorld gm){
-	// //Sprite[] s = {this};
-	// //gm.getSpriteManager().addSpritesToBeRemoved(s);
-	// }
+	
 
 	/*
 	 * public static void main(String[] args){

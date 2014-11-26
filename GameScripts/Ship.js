@@ -3,7 +3,7 @@
  */
 
 var reduceEnergy = function (energy, damage){
-	return energy-4*damage;
+	return energy-1*damage;
 };
 
 var fire = function (shipActualX,shipActualY,shipWidth){
