@@ -20,7 +20,7 @@ import pl.agit.Game.Sprites.Sprite;
 
 public class SpaceShip extends Sprite implements GameConst {
 
-	private int LEVEL_UPGRADE_JUMP = 2;
+	private int LEVEL_UPGRADE_JUMP = 2; //wspolczynnik zmiany poziomu
 	
 	private double mpozX = 500;
 	private double mpozY = 500;
@@ -35,7 +35,7 @@ public class SpaceShip extends Sprite implements GameConst {
 
 	
 	private SoundManager sm = SoundManager.getSoundManager(1);
-	ScriptManager scrm = ScriptManager.getScriptManager();
+	private ScriptManager scrm = ScriptManager.getScriptManager();
 
 	public SpaceShip() {
 
@@ -163,12 +163,6 @@ public class SpaceShip extends Sprite implements GameConst {
 		maxY = hy;
 		return false;
 	}
-
-//	public void stop() {
-//		// System.out.println("Stop");
-//		node.setTranslateX(mpozX - 20);
-//		node.setTranslateY(mpozY - 20);
-//	}
 
 	public double getMpozX() {
 		return mpozX;

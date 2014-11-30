@@ -23,6 +23,7 @@ public class ScriptManager {
 		scriptInvokeMap = new HashMap();
 		engine = new ScriptEngineManager().getEngineByName("nashorn");
 		
+		
 	}
 	
 	public static ScriptManager getScriptManager(){
@@ -30,6 +31,8 @@ public class ScriptManager {
 	}
 	
 	public void addScript(String name, String path) throws ScriptException, FileNotFoundException{
+		if(scriptInvokeMap.containsKey(name)) return;
+		
 		String filePath = new File("").getAbsolutePath(); //znalezienie sciaki bezwzglednej do projektu
 		engine.eval((new FileReader(filePath+path)));
 		Invocable inv = (Invocable)engine;

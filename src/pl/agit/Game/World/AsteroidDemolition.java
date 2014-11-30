@@ -45,6 +45,7 @@ import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.Sprites.SpriteManager;
+import pl.agit.Game.Sprites.Characters.AlienShip;
 import pl.agit.Game.Sprites.Characters.Asteroid;
 import pl.agit.Game.Sprites.Characters.Missile;
 import pl.agit.Game.Sprites.Characters.SpaceShip;
@@ -56,6 +57,8 @@ public class AsteroidDemolition extends GameWorld {
 
 	private int asteroidCount = 0;
 	private int missileCount = 0;
+	private int alienCount = 0;
+	
 	Image backgroundImage;
 	ImageView backView;
 	Group g = new Group();
@@ -120,7 +123,7 @@ public class AsteroidDemolition extends GameWorld {
 
 		// tworzenie asteroids
 		// generateManySpheres(150);
-		generateAsteroids();
+		//generateAsteroids();
 
 		// Display the number of spheres visible.
 		// Create a button to add more spheres.
@@ -225,6 +228,49 @@ public class AsteroidDemolition extends GameWorld {
 		};
 	}
 	
+	
+	private void generateAlien(){
+		AlienShip aCheck = new AlienShip(100, 100);//probny
+		
+		byte[][] alienMap = {
+				{1,1,1,0,0,0,0,1,1,1},
+				{1,1,1,1,1,1,1,1,1,1},
+				{0,0,0,1,1,1,1,0,0,0}
+				};
+		
+		int maxCol = (int)(getGameScene().getWidth()/aCheck.getImageWidth())-1;
+		int maxRow = (int)(getGameScene().getHeight()/aCheck.getImageHeight())-5;
+		
+		int startPozX = (int) ((int)(((maxCol-alienMap[0].length)/2)+1)*aCheck.getImageWidth());
+		int startPozY = 20;
+		int interPoz = 5;
+		
+		for(int c=0;c<alienMap.length;c++){
+			for (int r=0;r<alienMap[c].length;r++){
+				System.out.print(alienMap[c][r]+" ");
+				
+				if(alienMap[c][r]==1){
+				AlienShip a = new AlienShip(startPozX+(r*aCheck.getImageWidth())+interPoz, startPozY+(c*aCheck.getImageHeight())+interPoz);//probny
+				a.vX=2;
+				Sprite[] s = { a };
+				getSpriteManager().addSprites(s);
+				getSceneElements().getChildren().add(a.node);
+				}
+				
+			}
+			System.out.println();
+		}
+		
+		
+		
+		
+//		Sprite[] s = { a1 };
+//		getSpriteManager().addSprites(s);
+//		getSceneElements().getChildren().add(a1.node);
+		
+		alienCount++;
+	}
+	
 	// generowanie asteroid
 	private void generateAsteroids() {
 		Random random = new Random();
@@ -288,9 +334,11 @@ public class AsteroidDemolition extends GameWorld {
 	@Override
 	protected void respawnElements() {
 		asteroidCount = SpriteManager.getCountAsteroids();
-		if (asteroidCount == 0)
-			generateAsteroids(); // dodawanie asteroid
+//		if (asteroidCount == 0)
+//			generateAsteroids(); // dodawanie asteroid
 
+		if(alienCount==0)
+		generateAlien();
 	}
 
 	// kolizje dwoch obiektow

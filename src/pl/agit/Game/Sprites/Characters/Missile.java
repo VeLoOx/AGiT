@@ -9,6 +9,8 @@ public class Missile extends Sprite {
 	
 	private Circle bullet;
 	
+	private double damage;
+	
 public Missile(double radius,double x, double y, double vX, double vY) {
 		
 		bullet = new Circle();
@@ -19,9 +21,10 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 		
 		this.vX = vX;
 		this.vY = vY;
-		
-		
+				
 		node = bullet;	
+		
+		damage = 50;
 	}
 
 	@Override
@@ -56,6 +59,10 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 	public void noImplode(final GameWorld gameWorld){
 		isDead = true;
 		gameWorld.getSceneElements().getChildren().remove(node);
+	}
+	
+	public double getDamage(){
+		return damage;
 	}
 
 }
