@@ -2,47 +2,50 @@
  * Scripts for alien space ship
  */
 
-var behavior1 = function (as,speedCell){
-	/*Kamikaze behavior   - as = alien ship
+var behavior1 = function(as,startx,starty,sceneWidth) {
+	/*
+	 * Kamikaze behavior - as = alien ship
 	 * 
 	 * Statki lataja od lewej do prawej, i lososwo zlatuja w strone gracza
-	 * */
-	var atack = 0;
-	if (!Boolean(atack))
-		as.refreshView(as.getCellClips()[2]);
-	else {
-		as.refreshView();
-	}
-	
+	 * as-satatek
+	 * startx i starty = pozycje startowe
+	 * sceneWidth - szerokoscporuszania
+	 * changedView - znacznik zmiany stanu widoku
+	 */
+
 	as.node.setTranslateX(as.node.getTranslateX() + as.vX);
 	as.node.setTranslateY(as.node.getTranslateY() + as.vY);
-	
-		
-	if (as.node.getTranslateX() >= as.scW || as.node.getTranslateX() <= 20)
+
+	if (as.node.getTranslateX() >= sceneWidth || as.node.getTranslateX() <= 20)
 		as.vX = -as.vX;
 
 	var howLong = 300; // jak g³êboko ma zaatakowac
 
-	if (!Boolean(atack)) {
-		
+	if (as.atack == 0) { // jezeli nie atakuje
+
 		if (getRandomInt(0, 1000) == 1) {
-			atack = 1; //true
+			as.atack = 1; // true
 			as.vY = 10;
+			as.changedView=1;
+			return;
 		}
 	}
 	
-	if (as.node.getTranslateY() >= as.starty + howLong)
-		as.vY = -as.vY;
+		if (as.node.getTranslateY() >= starty + howLong){
+			as.vY = -as.vY; //cofnicie z ataku
+			return;
+		}
+		
+		if ((as.vY<0) && (as.node.getTranslateY() < starty)) { //wylaczenie z ataku
+			as.node.setTranslateY(starty);
+			as.atack = 0;
+			as.changedView=1;
+		}
 
-	if (as.node.getTranslateY() <= as.starty) {
-		as.node.setTranslateY(as.starty);
-		as.refreshView();
-		atack = 0; //false
-	}
 	
+
 };
 
-
 function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }

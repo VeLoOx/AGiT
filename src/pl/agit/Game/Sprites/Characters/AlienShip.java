@@ -33,18 +33,22 @@ public class AlienShip extends Sprite {
 	private SoundManager sm = SoundManager.getSoundManager(1);
 	private ScriptManager scrm = ScriptManager.getScriptManager();
 
-	public double scW; // maks szerokosc poruszania
+	private double scW; // maks szerokosc poruszania
 	private double scH; // maks wysokosc poruszania
 
-	public double startx; // pozycje poczatkowe
-	public double starty;
+	private double startx; // pozycje poczatkowe
+	private double starty;
 
 	private Rectangle2D[] cellClips = new Rectangle2D[3]; // klatki spritow
-	Rectangle2D actualCell;
+	private Rectangle2D actualCell;
+	public byte changedView = 0;
 	
-	ImageView alienView;
+	private ImageView alienView;
 	
+	public byte atack=0; //stan ataku 1=atak
 	
+	public long fireTime = 5000;
+	public long lastFireTime=System.currentTimeMillis();
 
 	private AlienShip() {
 		// GRAFIKA
@@ -75,6 +79,8 @@ public class AlienShip extends Sprite {
 		sphere.setRadius(alienBook.getBoundsInLocal().getWidth() / 2);
 
 		node = alienBook;
+		
+		node.setVisible(true);
 
 		// SKRYPTY
 
@@ -100,7 +106,7 @@ public class AlienShip extends Sprite {
 	@Override
 	public void update() {
 		//skrypt
-		Object[] o = {this};
+		Object[] o = {this,startx,starty,scW};
 		try {
 			 scrm.getScript(GameConst.JS_ALIENSHIP_NAME).invokeFunction("behavior1",o);
 		} catch (NoSuchMethodException e) {
@@ -113,56 +119,43 @@ public class AlienShip extends Sprite {
 		
 		
 		
-//		boolean atack = false;
-//
-//		if (!atack)
-//			refreshView(cellClips[2]);
-//		else {
-//			refreshView();
-//		}
-//		
-//		
-//
-//		// TODO Auto-generated method stub
-//		node.setTranslateX(node.getTranslateX() + vX);
-//		node.setTranslateY(node.getTranslateY() + vY);
-//
-//		if (node.getTranslateX() >= scW || node.getTranslateX() <= 20)
-//			vX = -vX;
-//
-//		int howLong = 300; // jak g³êboko ma zaatakowac
-//
-//		if (!atack) {
-//			Random r = new Random();
-//			if (r.nextInt(1000) == 1) {
-//				atack = true;
-//				vY = 10;
-//			}
-//		}
-//
-//		if (node.getTranslateY() >= starty + howLong)
-//			vY = -vY;
-//
-//		if (node.getTranslateY() <= starty) {
-//			node.setTranslateY(starty);
-//			refreshView();
-//			atack = false;
-//		}
+				
+		if (atack!=0){
+			refreshView(cellClips[2]);
+			//System.out.println("ATACK!");
+		}
+		else {
+			refreshView();
+		}
+		
 
+	}
+	
+	public AlienMissile fire (){
+		if(System.currentTimeMillis()-lastFireTime>fireTime){
+			lastFireTime=System.currentTimeMillis();
+			return new AlienMissile(10, node.getTranslateX()+alienBook.getBoundsInLocal().getWidth()/2, node.getTranslateY()+alienBook.getBoundsInLocal().getWidth()/2, 0, 5);
+		}
+		return null;
 	}
 
 	public void refreshView() {
+		if(changedView==0) return;
 		((ImageView) alienBook.getChildren().get(0)).setViewport(actualCell);
+		changedView=0;
 	}
 
 	public void refreshView(Rectangle2D rec) {
+		if(changedView==0) return;
 		((ImageView) alienBook.getChildren().get(0)).setViewport(rec);
+		changedView=1;
 	}
 
 	private void reduceEnergy(double dam) {
 		energy = energy - dam;
 		if (energy <= startEnergy / 2)
 			actualCell = cellClips[1];
+			changedView=1;
 	}
 
 	@Override

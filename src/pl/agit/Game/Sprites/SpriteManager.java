@@ -22,6 +22,10 @@ public class SpriteManager {
     public void addSprites(Sprite[] sprites) {
         GAME_ACTORS.addAll(Arrays.asList(sprites));
     }
+    
+    public void addSprite(Sprite sprite) {
+        GAME_ACTORS.add(sprite);
+    }
  
     //usuwanie spritow z gry
     public void removeSprites(Sprite[] sprites) {
@@ -76,6 +80,19 @@ public class SpriteManager {
     	
     	return z;
     	
+    }
+    
+    public static List getListObject(Class c){
+    	List<Object> list = new ArrayList<Object>();
+    	Iterator<Sprite> i = GAME_ACTORS.iterator();
+    	while(i.hasNext()){
+    		Object o = i.next();
+    		if(o.getClass().equals(c)){
+    			list.add(o);
+    		}
+    	}
+    	
+    	return list;
     }
     
    }

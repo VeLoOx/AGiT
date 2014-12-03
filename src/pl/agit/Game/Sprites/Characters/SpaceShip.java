@@ -17,6 +17,7 @@ import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
+import pl.agit.Game.World.GameWorld;
 
 public class SpaceShip extends Sprite implements GameConst {
 
@@ -100,7 +101,7 @@ public class SpaceShip extends Sprite implements GameConst {
 		} 
 	}
 
-	public void reducteEnergy(double dam) {
+	public void reduceEnergy(double dam) {
 		//wywolanie skryptowe redulcji energii
 		Object[] o = {energy,dam};
 		
@@ -163,6 +164,38 @@ public class SpaceShip extends Sprite implements GameConst {
 		maxY = hy;
 		return false;
 	}
+	
+//	@Override
+//	public boolean collide(Sprite other, GameWorld gm) {
+//
+//		if (other instanceof AlienMissile) {
+//			boolean val = collide((AlienMissile) other);
+//			if (val)
+//				// ((AsteroidDemolition) gm).addScore(50);
+//				reduceEnergy(other.getDamage());
+//			return val;
+//		}
+//		
+//		return false;
+//	}
+//	
+//	private boolean collide(AlienMissile other) {
+//		// //jesli ukryty to nie koliduje
+//		if (!node.isVisible() || !other.node.isVisible()) {
+//			return false;
+//		}
+//
+//		// kolizje zalezne od rozmiaru
+//		Circle otherSphere = other.getAsCircle();
+//		Circle thisSphere = getAsCircle();
+//		double dx = otherSphere.getTranslateX() - thisSphere.getTranslateX();
+//		double dy = otherSphere.getTranslateY() - thisSphere.getTranslateY();
+//		double distance = Math.sqrt(dx * dx + dy * dy);
+//		double minDist = otherSphere.getRadius() + thisSphere.getRadius() + 3;
+//
+//		return (distance < minDist);
+//	}
+
 
 	public double getMpozX() {
 		return mpozX;

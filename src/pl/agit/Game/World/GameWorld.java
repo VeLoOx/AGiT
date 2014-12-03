@@ -136,6 +136,7 @@ public abstract class GameWorld {
 	}
 
 	public Group getSceneElements() {
+		//System.out.println("POBRANO");
 		return sceneElements;
 	}
 

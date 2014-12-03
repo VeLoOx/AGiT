@@ -54,4 +54,8 @@ public abstract class Sprite {
     public void setDamage(double val){
     	
     }
+    
+    public Node getNode(){
+    	return node;
+    }
 }
