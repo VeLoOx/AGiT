@@ -16,13 +16,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import pl.agit.Game.Gamedef.GameConst;
+import pl.agit.Game.Image.ImageManager;
 import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
 
-public class AlienShip extends Sprite {
+public class AlienShip extends Sprite implements GameConst {
 
 	private double startEnergy = 100;
 	private double energy = startEnergy;
@@ -32,6 +33,7 @@ public class AlienShip extends Sprite {
 
 	private SoundManager sm = SoundManager.getSoundManager(1);
 	private ScriptManager scrm = ScriptManager.getScriptManager();
+	private ImageManager im = ImageManager.getImageManager();
 
 	private double scW; // maks szerokosc poruszania
 	private double scH; // maks wysokosc poruszania
@@ -43,7 +45,7 @@ public class AlienShip extends Sprite {
 	private Rectangle2D actualCell;
 	public byte changedView = 0;
 	
-	private ImageView alienView;
+	//private ImageView alienView;
 	
 	public byte atack=0; //stan ataku 1=atak
 	
@@ -52,19 +54,20 @@ public class AlienShip extends Sprite {
 
 	private AlienShip() {
 		// GRAFIKA
-		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
-														// bezwzglednej do
-														// projektu
-		// System.out.println(dir + GameConst.GFX_ALIENSHIP1);
-		URL u = null;
-		try {
-			u = new File(dir + GameConst.GFX_ALIENSHIP1).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Image alienImage = new Image(u.toExternalForm());
-		alienView = new ImageView(alienImage);
+//		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
+//														// bezwzglednej do
+//														// projektu
+//		// System.out.println(dir + GameConst.GFX_ALIENSHIP1);
+//		URL u = null;
+//		try {
+//			u = new File(dir + GameConst.GFX_ALIENSHIP1).toURI().toURL();
+//		} catch (MalformedURLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		Image alienImage = new Image(u.toExternalForm());
+//		alienView = new ImageView(alienImage);
+		im.loadImage(GFX_ALIENSHIP1_NAME, GFX_ALIENSHIP1);
 
 		cellClips[0] = new Rectangle2D(0 * 86, 0, 86, 100); // normlany
 		cellClips[1] = new Rectangle2D(1 * 86, 0, 86, 100); // uszkodzony
@@ -73,8 +76,8 @@ public class AlienShip extends Sprite {
 		actualCell = cellClips[0];
 		
 		
-		alienView.setViewport(actualCell);
-		alienBook.getChildren().add(alienView);
+		im.getImage(GFX_ALIENSHIP1_NAME).setViewport(actualCell);
+		alienBook.getChildren().add(im.getImage(GFX_ALIENSHIP1_NAME));
 
 		sphere.setRadius(alienBook.getBoundsInLocal().getWidth() / 2);
 

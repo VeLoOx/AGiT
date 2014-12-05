@@ -15,12 +15,12 @@ public class SoundManager {
 	    private static SoundManager instance;
 
 	    
-	    public SoundManager(int numberOfThreads) {
-	        soundPool = Executors.newFixedThreadPool(numberOfThreads);
-	    }
+//	    public SoundManager(int numberOfThreads) {
+//	        soundPool = Executors.newFixedThreadPool(numberOfThreads);
+//	    }
 	    
-	    private SoundManager(){
-	    	
+	    private SoundManager(int numberOfThreads){
+	    	 soundPool = Executors.newFixedThreadPool(numberOfThreads);
 	    }
 	    
 	    public static SoundManager getSoundManager(int numberOfThreads){

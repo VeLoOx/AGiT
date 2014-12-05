@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class MainLoop extends Application{
 	
 	 	   	 
-	GameWorld gameWorld = new AsteroidDemolition(60, "JavaFX 2 GameTutorial Part 2 - Game Loop");
+	GameWorld gameWorld = new AsteroidDemolition(60, "Asteroids - Game Loop");
     /**
      * @param args the command line arguments
      */

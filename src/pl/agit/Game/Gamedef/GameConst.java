@@ -18,10 +18,13 @@ public interface GameConst {
 	
 	//----GRAFIKI
 	String GFX_MAINSHIP = "/GameGfxFiles/ship.png";
+	String GFX_MAINSHIP_NAME = "MainShip";
 	String GFX_MAINSPACE = "/GameGfxFiles/space.jpg";
+	String GFX_MAINSPACE_NAME="MainSpace";
 	String GFX_ASTEROID = "/GameGfxFiles/ast.png";
+	String GFX_ASTEROID_NAME="Asteroid";
 	String GFX_ALIENSHIP1 = "/GameGfxFiles/alienShip2.png";
-	
+	String GFX_ALIENSHIP1_NAME="AlienShip1";
 	
 	
 	

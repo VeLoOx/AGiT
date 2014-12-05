@@ -45,6 +45,7 @@ import javafx.stage.WindowEvent;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.internal.objects.NativeArray;
 import pl.agit.Game.Gamedef.GameConst;
+import pl.agit.Game.Image.ImageManager;
 import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sound.SoundManager;
 import pl.agit.Game.Sprites.Sprite;
@@ -56,14 +57,14 @@ import pl.agit.Game.Sprites.Characters.Missile;
 import pl.agit.Game.Sprites.Characters.SpaceShip;
 import pl.agit.Game.World.GUIElements.GameStats;
 
-public class AsteroidDemolition extends GameWorld {
+public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	private GameStats gameStats;
 
 	private int asteroidCount = 0;
 	private int missileCount = 0;
 	private int alienCount = 0;
-	
+
 	Image backgroundImage;
 	ImageView backView;
 	Group g = new Group();
@@ -72,27 +73,31 @@ public class AsteroidDemolition extends GameWorld {
 
 	SoundManager sm = SoundManager.getSoundManager(1);
 	ScriptManager scrm = ScriptManager.getScriptManager();
+	ImageManager im = ImageManager.getImageManager();
 
 	public AsteroidDemolition(int fps, String title) {
 		super(fps, title);
 
 		// GRAFIKA
-		String dir = new File("").getAbsolutePath(); // znalezienie sciaki  bezwzglednej do  projektu
+//		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
+//														// bezwzglednej do
+//														// projektu
+//
+//		URL u = null;
+//		try {
+//			u = new File(dir + GameConst.GFX_MAINSPACE).toURI().toURL();
+//		} catch (MalformedURLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		backgroundImage = new Image(u.toExternalForm());
+//		backView = new ImageView(backgroundImage);
+		im.loadImage(GFX_MAINSPACE_NAME, GFX_MAINSPACE);
 
-		URL u = null;
+		// SKRYPTY
 		try {
-			u = new File(dir + GameConst.GFX_MAINSPACE).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		backgroundImage = new Image(u.toExternalForm());
-		backView = new ImageView(backgroundImage);
-		
-		
-		//SKRYPTY
-		try {
-			scrm.addScript(GameConst.JS_ASTEROID_DEMOLITION_NAME, GameConst.JS_ASTEROID_DEMOLITION);
+			scrm.addScript(GameConst.JS_ASTEROID_DEMOLITION_NAME,
+					GameConst.JS_ASTEROID_DEMOLITION);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,17 +112,17 @@ public class AsteroidDemolition extends GameWorld {
 		// backView.setD
 		primaryStage.setTitle(getWindowTitle()); // tytul okna
 		primaryStage.setFullScreen(true);
-		g.getChildren().add(backView);
+		g.getChildren().add(im.getImage(GFX_MAINSPACE_NAME));
 		Node node = g;
 		node.toBack();
-		gameStats = new GameStats(primaryStage.getWidth(), primaryStage.getHeight());
+		gameStats = new GameStats(primaryStage.getWidth(),
+				primaryStage.getHeight());
 
 		// tworzenie sceny
 		setSceneElements(new Group());
 		Scene sc = new Scene(getSceneElements());
 		setGameScene(sc);
-		
-		
+
 		getGameScene().getStylesheets().addAll(GameConst.CSS_PACKAGE_PATH);
 		primaryStage.setScene(getGameScene());
 
@@ -128,7 +133,7 @@ public class AsteroidDemolition extends GameWorld {
 
 		// tworzenie asteroids
 		// generateManySpheres(150);
-		//generateAsteroids();
+		// generateAsteroids();
 
 		// Display the number of spheres visible.
 		// Create a button to add more spheres.
@@ -141,30 +146,38 @@ public class AsteroidDemolition extends GameWorld {
 
 	}
 
-	public void addScore(int val){
+	public void addScore(int val) {
 		ship.addScore(val);
 	}
- 	public void reductionMissile() {
+
+	public void reductionMissile() {
 		missileCount--;
 	}
 
 	private void setupInput(final Stage primaryStage) {
-		
-		//okno
-		primaryStage.setOnCloseRequest(getCloseWindowEv()); //zamkniecie krzyzykiem
-		
-		//mysz
-		primaryStage.getScene().setOnMouseMoved(getMoveMouseEv()); //poruszanie statkiem poprzez ruch kursora
-		primaryStage.getScene().setOnMousePressed(getMoveOrFire()); //strzelanie lewym
-		primaryStage.getScene().setOnMouseDragged(getMovedragOrFireMouseEv()); //strzelanie padczas poruszania
+
+		// okno
+		primaryStage.setOnCloseRequest(getCloseWindowEv()); // zamkniecie
+															// krzyzykiem
+
+		// mysz
+		primaryStage.getScene().setOnMouseMoved(getMoveMouseEv()); // poruszanie
+																	// statkiem
+																	// poprzez
+																	// ruch
+																	// kursora
+		primaryStage.getScene().setOnMousePressed(getMoveOrFire()); // strzelanie
+																	// lewym
+		primaryStage.getScene().setOnMouseDragged(getMovedragOrFireMouseEv()); // strzelanie
+																				// padczas
+																				// poruszania
 		primaryStage.getScene().setOnKeyPressed(getKeyboardEv(primaryStage));
 	}
-	
-	
-	//zdarzenia sterowania
-	
-	private EventHandler<MouseEvent> getMoveOrFire(){
-		//strzelanie lewym przyciskiem myszy
+
+	// zdarzenia sterowania
+
+	private EventHandler<MouseEvent> getMoveOrFire() {
+		// strzelanie lewym przyciskiem myszy
 		return new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -178,10 +191,10 @@ public class AsteroidDemolition extends GameWorld {
 				}
 			}
 		};
-		
+
 	}
 
-	private EventHandler<MouseEvent> getMoveMouseEv(){
+	private EventHandler<MouseEvent> getMoveMouseEv() {
 		return new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -191,10 +204,10 @@ public class AsteroidDemolition extends GameWorld {
 			}
 		};
 	}
-	
-	private EventHandler<MouseEvent> getMovedragOrFireMouseEv(){
-		//strzelanie podczas poruszania (strzelanie nie zaimplementowane)
-		return  new EventHandler<MouseEvent>() {
+
+	private EventHandler<MouseEvent> getMovedragOrFireMouseEv() {
+		// strzelanie podczas poruszania (strzelanie nie zaimplementowane)
+		return new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				ship.setMpozX(event.getX());
@@ -203,47 +216,50 @@ public class AsteroidDemolition extends GameWorld {
 			}
 		};
 	}
-	
-	private EventHandler<WindowEvent> getCloseWindowEv(){
-		//zamkniecie okna krzyzykiem
+
+	private EventHandler<WindowEvent> getCloseWindowEv() {
+		// zamkniecie okna krzyzykiem
 		return new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
-				
+
 				sm.shutdown();
 				System.out.println("Stage is closing");
 			}
 		};
 	}
-	
-	private EventHandler<KeyEvent> getKeyboardEv(final Stage pm){
-		return new EventHandler<KeyEvent>(){
-			public void handle(KeyEvent ke){
-				if(ke.getCode()==KeyCode.ESCAPE){
+
+	private EventHandler<KeyEvent> getKeyboardEv(final Stage pm) {
+		return new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent ke) {
+				if (ke.getCode() == KeyCode.ESCAPE) {
 					sm.shutdown();
 					System.out.println("Stage is closing");
 					pm.close();
 				}
-				
-				if(ke.getCode()==KeyCode.TAB){
-					//boolean vis = gameStats.getStats().isVisible();
-					if(gameStats.getVBox().isVisible()) gameStats.getVBox().setVisible(false); else gameStats.getVBox().setVisible(true); 
-					
+
+				if (ke.getCode() == KeyCode.TAB) {
+					// boolean vis = gameStats.getStats().isVisible();
+					if (gameStats.getVBox().isVisible())
+						gameStats.getVBox().setVisible(false);
+					else
+						gameStats.getVBox().setVisible(true);
+
 				}
 			}
 		};
 	}
-	
-	
-	private void generateAlien(){
-		
-		AlienShip aCheck = new AlienShip(100, 100);//probny
-		
-	
-		//zaladowanie lsosowego ukladu stakow obcych
+
+	private void generateAlien() {
+
+		AlienShip aCheck = new AlienShip(100, 100);// probny
+
+		// zaladowanie lsosowego ukladu stakow obcych
 		byte[][] alienMap1 = null;
-		
+
 		try {
-			alienMap1 = (byte[][]) scrm.getScript(GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction("returnAlienMap");
+			alienMap1 = (byte[][]) scrm.getScript(
+					GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
+					"returnAlienMap");
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,47 +268,52 @@ public class AsteroidDemolition extends GameWorld {
 			e.printStackTrace();
 			return;
 		}
-		
-		int maxCol = (int)(getGameScene().getWidth()/aCheck.getImageWidth())-1;
-		int maxRow = (int)(getGameScene().getHeight()/aCheck.getImageHeight())-5;
-		
-		int startPozX = (int) ((int)(((maxCol-10)/2)+1)*aCheck.getImageWidth());
+
+		int maxCol = (int) (getGameScene().getWidth() / aCheck.getImageWidth()) - 1;
+		int maxRow = (int) (getGameScene().getHeight() / aCheck
+				.getImageHeight()) - 5;
+
+		int startPozX = (int) ((int) (((maxCol - 10) / 2) + 1) * aCheck
+				.getImageWidth());
 		int startPozY = 20;
 		int interPoz = 5;
-		
-		for(int c=0;c<alienMap1.length;c++){
-			for (int r=0;r<alienMap1[c].length;r++){
-				System.out.print(alienMap1[c][r]+" ");
-				
-				if(alienMap1[c][r]==1){
-				AlienShip a = new AlienShip(startPozX+(r*aCheck.getImageWidth())+interPoz, startPozY+(c*aCheck.getImageHeight())+interPoz);//probny
-				a.vX=2;
-				Sprite[] s = { a };
-				getSpriteManager().addSprites(s);
-				getSceneElements().getChildren().add(a.node);
+
+		for (int c = 0; c < alienMap1.length; c++) {
+			for (int r = 0; r < alienMap1[c].length; r++) {
+				System.out.print(alienMap1[c][r] + " ");
+
+				if (alienMap1[c][r] == 1) {
+					AlienShip a = new AlienShip(startPozX
+							+ (r * aCheck.getImageWidth()) + interPoz,
+							startPozY + (c * aCheck.getImageHeight())
+									+ interPoz);// probny
+					a.vX = 2;
+					Sprite[] s = { a };
+					getSpriteManager().addSprites(s);
+					getSceneElements().getChildren().add(a.node);
 				}
-				
+
 			}
 			System.out.println();
 		}
-		
-	
-		
+
 		alienCount++;
 	}
-	
+
 	// generowanie asteroid
 	private void generateAsteroids() {
 		Random random = new Random();
 		int anumb = random.nextInt(9) + 1;
 		Scene scene = getGameScene();
-		Double o = scene.getWidth(); 
+		Double o = scene.getWidth();
 		for (int i = 0; i < anumb; i++) {
-						
-			Asteroid ast=null;
+
+			Asteroid ast = null;
 			try {
-				ast = (Asteroid) scrm.getScript(GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction("generateAsteroid1", o);
-				
+				ast = (Asteroid) scrm.getScript(
+						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
+						"generateAsteroid1", o);
+
 			} catch (NoSuchMethodException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -309,7 +330,6 @@ public class AsteroidDemolition extends GameWorld {
 
 	}
 
-	
 	// uaktualnianie aktorow
 	@Override
 	protected void handleUpdate(Sprite sprite) {
@@ -338,7 +358,7 @@ public class AsteroidDemolition extends GameWorld {
 
 			}
 		}
-		
+
 		if (sprite instanceof AlienMissile) {
 			AlienMissile sphere = (AlienMissile) sprite;
 			if (sphere.handleBoundsMeet(getGameScene().getWidth(),
@@ -353,21 +373,22 @@ public class AsteroidDemolition extends GameWorld {
 	@Override
 	protected void respawnElements() {
 		asteroidCount = SpriteManager.getCountAsteroids();
-//		if (asteroidCount == 0)
-//			generateAsteroids(); // dodawanie asteroid
+		// if (asteroidCount == 0)
+		// generateAsteroids(); // dodawanie asteroid
 
-		if(alienCount==0)
-		generateAlien();
-		
+		if (alienCount == 0)
+			generateAlien();
+
 		List<Object> l = SpriteManager.getListObject(AlienShip.class);
 		Iterator<Object> i = l.iterator();
-		while(i.hasNext()){
-			AlienShip a = (AlienShip)i.next();
-			
+		while (i.hasNext()) {
+			AlienShip a = (AlienShip) i.next();
+
 			AlienMissile am = a.fire();
-			if(am==null) continue; 
-			
-			Sprite[] o = {am};
+			if (am == null)
+				continue;
+
+			Sprite[] o = { am };
 			getSpriteManager().addSprites(o);
 			getSceneElements().getChildren().add(am.node);
 		}
@@ -378,20 +399,19 @@ public class AsteroidDemolition extends GameWorld {
 	protected boolean handleCollision(Sprite spriteA, Sprite spriteB) {
 		if (spriteA != spriteB) {
 
-			if (spriteA.collide(spriteB,this)) {
-												
+			if (spriteA.collide(spriteB, this)) {
+
 				spriteA.handleDeath(this);
-				
+
 				if (spriteB != ship) {
-					
+
 					spriteB.handleDeath(this);
 				}
 				if (spriteB == ship) {
 					System.out.println("C ");
 					ship.reduceEnergy(spriteA.getDamage());
 				}
-				
-				
+
 			}
 		}
 
@@ -409,8 +429,8 @@ public class AsteroidDemolition extends GameWorld {
 		gameStats.updateSpaceEnergyCounter(ship.getEnergy());
 		gameStats.updateSpaceScoreCounter(ship.getScore());
 		gameStats.updateSpaceLevelCounter(ship.getLevel());
-		
-		//System.out.println("ALIEN="+SpriteManager.getListObject(AlienShip.class).size());
+
+		// System.out.println("ALIEN="+SpriteManager.getListObject(AlienShip.class).size());
 
 	}
 
@@ -418,59 +438,56 @@ public class AsteroidDemolition extends GameWorld {
 		double x;
 		double y;
 	};
-	
-	
-	
-	
-	//-------nieuzywane
+
+	// -------nieuzywane
 	// nie uzywana
-		private void generateManySpheres(int numSpheres) {
-			Random rnd = new Random();
-			Scene gameSurface = getGameScene();
-			for (int i = 0; i < numSpheres; i++) {
-				Color c = Color.rgb(rnd.nextInt(255), rnd.nextInt(255),
-						rnd.nextInt(255));
-				Asteroid b = new Asteroid(
-						rnd.nextInt(15) + 5,
-						LinearGradient
-								.valueOf("linear-gradient(from 0% 0% to 100% 100%, red  0% , blue 30%,  black 100%)"));
-				Circle circle = b.getAsCircle();
-				// random 0 to 2 + (.0 to 1) * random (1 or -1)
-				b.vX = (rnd.nextInt(2) + rnd.nextDouble())
-						* (rnd.nextBoolean() ? 1 : -1);
-				b.vY = (rnd.nextInt(2) + rnd.nextDouble())
-						* (rnd.nextBoolean() ? 1 : -1);
+	private void generateManySpheres(int numSpheres) {
+		Random rnd = new Random();
+		Scene gameSurface = getGameScene();
+		for (int i = 0; i < numSpheres; i++) {
+			Color c = Color.rgb(rnd.nextInt(255), rnd.nextInt(255),
+					rnd.nextInt(255));
+			Asteroid b = new Asteroid(
+					rnd.nextInt(15) + 5,
+					LinearGradient
+							.valueOf("linear-gradient(from 0% 0% to 100% 100%, red  0% , blue 30%,  black 100%)"));
+			Circle circle = b.getAsCircle();
+			// random 0 to 2 + (.0 to 1) * random (1 or -1)
+			b.vX = (rnd.nextInt(2) + rnd.nextDouble())
+					* (rnd.nextBoolean() ? 1 : -1);
+			b.vY = (rnd.nextInt(2) + rnd.nextDouble())
+					* (rnd.nextBoolean() ? 1 : -1);
 
-				// random x between 0 to width of scene
-				double newX = rnd.nextInt((int) gameSurface.getWidth());
+			// random x between 0 to width of scene
+			double newX = rnd.nextInt((int) gameSurface.getWidth());
 
-				// check for the right of the width newX is greater than width
-				// minus radius times 2(width of sprite)
-				if (newX > (gameSurface.getWidth() - (circle.getRadius() * 2))) {
-					newX = gameSurface.getWidth() - (circle.getRadius() * 2);
-				}
-
-				// check for the bottom of screen the height newY is greater than
-				// height
-				// minus radius times 2(height of sprite)
-				double newY = rnd.nextInt((int) gameSurface.getHeight());
-				if (newY > (gameSurface.getHeight() - (circle.getRadius() * 2))) {
-					newY = gameSurface.getHeight() - (circle.getRadius() * 2);
-				}
-
-				circle.setTranslateX(newX);
-				circle.setTranslateY(newY);
-				circle.setVisible(true);
-				circle.setId(b.toString());
-
-				// add to actors in play (sprite objects)
-				Sprite[] s = { b };
-				getSpriteManager().addSprites(s);
-
-				// add sprite's
-				getSceneElements().getChildren().add(0, b.node);
-
+			// check for the right of the width newX is greater than width
+			// minus radius times 2(width of sprite)
+			if (newX > (gameSurface.getWidth() - (circle.getRadius() * 2))) {
+				newX = gameSurface.getWidth() - (circle.getRadius() * 2);
 			}
+
+			// check for the bottom of screen the height newY is greater than
+			// height
+			// minus radius times 2(height of sprite)
+			double newY = rnd.nextInt((int) gameSurface.getHeight());
+			if (newY > (gameSurface.getHeight() - (circle.getRadius() * 2))) {
+				newY = gameSurface.getHeight() - (circle.getRadius() * 2);
+			}
+
+			circle.setTranslateX(newX);
+			circle.setTranslateY(newY);
+			circle.setVisible(true);
+			circle.setId(b.toString());
+
+			// add to actors in play (sprite objects)
+			Sprite[] s = { b };
+			getSpriteManager().addSprites(s);
+
+			// add sprite's
+			getSceneElements().getChildren().add(0, b.node);
+
 		}
+	}
 
 }
