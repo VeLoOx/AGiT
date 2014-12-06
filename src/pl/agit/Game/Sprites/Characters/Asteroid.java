@@ -18,37 +18,30 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
 import pl.agit.Game.Gamedef.GameConst;
+import pl.agit.Game.Image.ImageManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
 import javafx.util.Duration;
 
-public class Asteroid extends Sprite {
+public class Asteroid extends Sprite implements GameConst {
 
 	private Circle asteroid;
 	Circle sphere;
 	private final Group astBook = new Group();
 	private double radius;
+	
+	ImageManager im = ImageManager.getImageManager();
 
 	private Asteroid(double radius) {
 
 		sphere = new Circle();
 
-		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
-														// bezwzglednej do
-														// projektu
-		// System.out.println(dir+GameConst.GFX_ASTEROID);
-		URL u = null;
-		try {
-			u = new File(dir + GameConst.GFX_ASTEROID).toURI().toURL();
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Image astImage = new Image(u.toExternalForm(), radius * 2, radius * 2,
-				false, false);
-		ImageView astView = new ImageView(astImage);
-
+					
+		im.loadImage(GFX_ASTEROID_NAME,GFX_ASTEROID);
+		ImageView astView = new ImageView(im.getImage(GFX_ASTEROID_NAME));
+		astView.setFitHeight(radius*2);
+		astView.setFitWidth(radius*2);
 		astBook.getChildren().addAll(astView);
 
 		this.radius = radius;

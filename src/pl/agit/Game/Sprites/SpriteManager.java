@@ -23,6 +23,10 @@ public class SpriteManager {
         GAME_ACTORS.addAll(Arrays.asList(sprites));
     }
     
+    public void addSprites(Object[] sprites) {
+        GAME_ACTORS.addAll(Arrays.asList(sprites));
+    }
+    
     public void addSprite(Sprite sprite) {
         GAME_ACTORS.add(sprite);
     }

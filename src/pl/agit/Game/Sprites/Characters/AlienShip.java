@@ -34,7 +34,7 @@ public class AlienShip extends Sprite implements GameConst {
 	private SoundManager sm = SoundManager.getSoundManager(1);
 	private ScriptManager scrm = ScriptManager.getScriptManager();
 	private ImageManager im = ImageManager.getImageManager();
-
+	private ImageView imageView;
 	private double scW; // maks szerokosc poruszania
 	private double scH; // maks wysokosc poruszania
 
@@ -53,20 +53,7 @@ public class AlienShip extends Sprite implements GameConst {
 	public long lastFireTime=System.currentTimeMillis();
 
 	private AlienShip() {
-		// GRAFIKA
-//		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
-//														// bezwzglednej do
-//														// projektu
-//		// System.out.println(dir + GameConst.GFX_ALIENSHIP1);
-//		URL u = null;
-//		try {
-//			u = new File(dir + GameConst.GFX_ALIENSHIP1).toURI().toURL();
-//		} catch (MalformedURLException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		Image alienImage = new Image(u.toExternalForm());
-//		alienView = new ImageView(alienImage);
+		
 		im.loadImage(GFX_ALIENSHIP1_NAME, GFX_ALIENSHIP1);
 
 		cellClips[0] = new Rectangle2D(0 * 86, 0, 86, 100); // normlany
@@ -75,9 +62,9 @@ public class AlienShip extends Sprite implements GameConst {
 
 		actualCell = cellClips[0];
 		
-		
-		im.getImage(GFX_ALIENSHIP1_NAME).setViewport(actualCell);
-		alienBook.getChildren().add(im.getImage(GFX_ALIENSHIP1_NAME));
+		imageView = new ImageView(im.getImage(GFX_ALIENSHIP1_NAME));
+		imageView.setViewport(actualCell);
+		alienBook.getChildren().add(imageView);
 
 		sphere.setRadius(alienBook.getBoundsInLocal().getWidth() / 2);
 
@@ -154,11 +141,13 @@ public class AlienShip extends Sprite implements GameConst {
 		changedView=1;
 	}
 
-	private void reduceEnergy(double dam) {
+	private double reduceEnergy(double dam) {
 		energy = energy - dam;
 		if (energy <= startEnergy / 2)
 			actualCell = cellClips[1];
 			changedView=1;
+		
+		return energy;
 	}
 
 	@Override
@@ -167,8 +156,7 @@ public class AlienShip extends Sprite implements GameConst {
 		if (other instanceof Missile) {
 			boolean val = collide((Missile) other);
 			if (val)
-				// ((AsteroidDemolition) gm).addScore(50);
-				reduceEnergy(other.getDamage());
+				if(reduceEnergy(other.getDamage())<=0) ((AsteroidDemolition)gm).addScore(50);;
 			return val;
 		}
 		if (other instanceof SpaceShip) {

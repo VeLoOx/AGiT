@@ -7,13 +7,16 @@ public interface GameConst {
 	
 	//----SKRYPTY
 	String JS_MAINSHIP = "/GameScripts/Ship.js";
-	String JS_MAINSHIP_NAME = "mainship";
+	String JS_MAINSHIP_NAME = "/GameScripts/mainship";
 	
 	String JS_ALIENSHIP = "/GameScripts/AlienShip.js";
-	String JS_ALIENSHIP_NAME = "alienship";
+	String JS_ALIENSHIP_NAME = "/GameScripts/alienship";
 	
 	String JS_ASTEROID_DEMOLITION = "/GameScripts/AsteroidDemolition.js";
 	String JS_ASTEROID_DEMOLITION_NAME = "/GameScripts/asteroiddemo";
+	
+	String JS_ALIEN_MAP = "/GameScripts/AlienMaps.js";
+	String JS_ALIEN_MAP_NAME = "/GameScripts/alienname";
 	
 	
 	//----GRAFIKI

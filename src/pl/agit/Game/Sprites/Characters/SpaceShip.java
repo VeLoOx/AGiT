@@ -3,6 +3,7 @@ package pl.agit.Game.Sprites.Characters;
 import java.io.FileNotFoundException;
 
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 
 import javax.script.ScriptException;
@@ -47,11 +48,11 @@ public class SpaceShip extends Sprite implements GameConst {
 //			e1.printStackTrace();
 //		}
 //		Image shipImage = new Image(u.toExternalForm());
-//		ImageView shipView = new ImageView(shipImage);
-
 		im.loadImage(GFX_MAINSHIP_NAME, GFX_MAINSHIP);
+		ImageView shipView = new ImageView(im.getImage(GFX_MAINSHIP_NAME));
+		
 
-		shipBook.getChildren().addAll(im.getImage(GFX_MAINSHIP_NAME));
+		shipBook.getChildren().addAll(shipView);
 		shipBook.setTranslateX(100);
 		shipBook.setTranslateY(100);
 		node = shipBook;

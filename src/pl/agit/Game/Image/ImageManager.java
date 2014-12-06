@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class ImageManager {
-	Map<String, ImageView> imagesMap = new HashMap<>();
+	Map<String, Image> imagesMap = new HashMap<>();
 	private static ImageManager instance;
 
 	private ImageManager() {
@@ -23,12 +23,9 @@ public class ImageManager {
 		}
 		return instance;
 	}
-
-	public void loadImage(String id, String path) {
-
-		String dirPath = new File("").getAbsolutePath(); // znalezienie sciaki
-															// bezwzglednej do
-															// projektu
+	
+	private URL toURL(String path){
+		String dirPath = new File("").getAbsolutePath();
 
 		URL u = null;
 		try {
@@ -37,15 +34,39 @@ public class ImageManager {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		return u;
+	}
 
-		Image image = new Image(u.toExternalForm());
-		ImageView imageView = new ImageView(image);
-		imagesMap.put(id, imageView);
+	public void loadImage(String id, String path) {
+
+		if (imagesMap.containsKey(id))
+			return;
+
+		URL tmpu = toURL(path);
+		if(tmpu==null) return;
+		
+		Image image = new Image(tmpu.toExternalForm());
+		// ImageView imageView = new ImageView(image);
+		imagesMap.put(id, image);
 	}
 	
-	public ImageView getImage(String id){
+	public void loadImage(String id, String path, double sizex, double sizey) {
+
+		if (imagesMap.containsKey(id))
+			return;
+
+		URL tmpu = toURL(path);
+		if(tmpu==null) return;
 		
+		Image image = new Image(tmpu.toExternalForm(),sizex,sizey,false,false);
+		// ImageView imageView = new ImageView(image);
+		imagesMap.put(id, image);
+	}
+
+	public Image getImage(String id) {
+
 		return imagesMap.get(id);
-		
+
 	}
 }

@@ -56,6 +56,8 @@ public abstract class GameWorld {
 
 			@Override
 			public void handle(javafx.event.Event event) {
+				revideGame();
+				
 				checkCollisions();
 				
 				updateSprites();
@@ -63,6 +65,8 @@ public abstract class GameWorld {
 				cleanupSprites();
 
 				respawnElements();
+				
+				updateBehaviorSprites();
 			}
 
 		}); // oneFrame
@@ -96,6 +100,13 @@ public abstract class GameWorld {
 
 	}
 
+	protected void revideGame() {
+
+	}
+	
+	protected void updateBehaviorSprites() {
+
+	}
 	
 	protected void checkCollisions() {
 		// check other sprite's collisions
