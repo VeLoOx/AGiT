@@ -73,6 +73,12 @@ public class SpriteManager {
         CLEAN_UP_SPRITES.clear();
     }
     
+    public void clearAllStuff(){
+    	GAME_ACTORS.clear();
+    	CHECK_COLLISION_LIST.clear();
+    	CLEAN_UP_SPRITES.clear();
+    }
+    
     public static int getCountAsteroids(){
     	Iterator<Sprite> i = GAME_ACTORS.iterator();
     	int z=0;

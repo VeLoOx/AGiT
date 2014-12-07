@@ -2,7 +2,7 @@ load("../JavaProject/GameScripts/AlienMaps.js");
 
 var generateAsteroid1 = function(sceneWidth) {
 	var ASTEROID = Java.type("pl.agit.Game.Sprites.Characters.Asteroid");
-	var ast = new ASTEROID(getRandomInt(5, 21), "red");
+	var ast = new ASTEROID(getRandomInt(5, 20), "red");
 
 	var CIRCLE = Java.type("javafx.scene.shape.Circle");
 	var node = ast.getAsNode();

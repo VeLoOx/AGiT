@@ -12,6 +12,9 @@ public interface GameConst {
 	String JS_ALIENSHIP = "/GameScripts/AlienShip.js";
 	String JS_ALIENSHIP_NAME = "/GameScripts/alienship";
 	
+	String JS_ASTEROID = "/GameScripts/Asteroid.js";
+	String JS_ASTEROID_NAME = "/GameScripts/asteroid";
+	
 	String JS_ASTEROID_DEMOLITION = "/GameScripts/AsteroidDemolition.js";
 	String JS_ASTEROID_DEMOLITION_NAME = "/GameScripts/asteroiddemo";
 	

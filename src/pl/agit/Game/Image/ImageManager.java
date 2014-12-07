@@ -24,6 +24,8 @@ public class ImageManager {
 		return instance;
 	}
 	
+	
+	
 	private URL toURL(String path){
 		String dirPath = new File("").getAbsolutePath();
 

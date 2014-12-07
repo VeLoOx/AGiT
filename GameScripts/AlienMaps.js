@@ -27,8 +27,8 @@ var getMapList = function(){
 	var lista = new ArrayList()
 	
 		lista.add(map1);
-		lista.add(map2);
-		lista.add(map3);
+		//lista.add(map2);
+		//lista.add(map3);
 	return lista;
 	
 }

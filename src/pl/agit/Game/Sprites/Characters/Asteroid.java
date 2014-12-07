@@ -1,8 +1,12 @@
 package pl.agit.Game.Sprites.Characters;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
+
+import javax.script.ScriptException;
 
 import javafx.animation.FadeTransitionBuilder;
 import javafx.event.ActionEvent;
@@ -19,6 +23,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.CircleBuilder;
 import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.Image.ImageManager;
+import pl.agit.Game.Scripts.ScriptManager;
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
@@ -32,6 +37,7 @@ public class Asteroid extends Sprite implements GameConst {
 	private double radius;
 	
 	ImageManager im = ImageManager.getImageManager();
+	ScriptManager sm = ScriptManager.getScriptManager();
 
 	private Asteroid(double radius) {
 
@@ -48,6 +54,18 @@ public class Asteroid extends Sprite implements GameConst {
 		sphere.setRadius(radius);
 
 		node = astBook;
+		
+		try {
+			sm.addScript(GameConst.JS_ASTEROID_NAME,GameConst.JS_ASTEROID);
+						
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public Asteroid(double radius, RadialGradient color) {
@@ -85,14 +103,6 @@ public class Asteroid extends Sprite implements GameConst {
 		node.setTranslateX(node.getTranslateX() + vX);
 		node.setTranslateY(node.getTranslateY() + vY);
 
-//		System.out.println("NODE: X=" + node.getTranslateX() + "  Y: "
-//				+ node.getTranslateY() + "WIDHT = "
-//				+ node.getBoundsInLocal().getWidth());
-//		Circle c = getAsCircle();
-//		System.out.println("CIRC: X=" + c.getTranslateX() + "  Y: "
-//				+ c.getTranslateY() + "WIDHT = "
-//				+ c.getBoundsInLocal().getWidth());
-
 	}
 
 	@Override
@@ -107,8 +117,10 @@ public class Asteroid extends Sprite implements GameConst {
 		}
 		if (other instanceof Missile) {
 			boolean val = collide((Missile) other);
-			if (val)
+			if (val){
 				((AsteroidDemolition) gm).addScore(50);
+				generateShatter(gm, getNode().getTranslateX(), getNode().getTranslateY(), vY);
+			}
 			return val;
 		}
 		if (other instanceof SpaceShip) {
@@ -219,6 +231,46 @@ public class Asteroid extends Sprite implements GameConst {
 					}
 
 				}).build().play();
+	}
+	
+	//generuje od³amki
+	private void generateShatter(GameWorld g, double pozx, double pozy, double vY){
+		if(radius < 15) return;
+		
+		Object[] o = {this.getNode().getTranslateX(),this.getNode().getTranslateY(),vY,radius};
+		Asteroid[] aT = null;
+		try {
+			aT = (Asteroid[]) sm.getScript(GameConst.JS_ASTEROID_NAME).invokeFunction("generateShatter", o);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		((AsteroidDemolition)g).addToRespawnSprite(aT);
+		
+		/*Random r = new Random();
+		int newMaxRadius = (int) (radius/2);
+		int newMinRadius = (int) (radius/3);
+		
+		int shatterNumb = r.nextInt(3)+1;
+		for(int i=0;i<shatterNumb;i++){
+			
+			double rad = r.nextInt(newMaxRadius-newMinRadius)+newMinRadius;;
+					
+			Asteroid a = new Asteroid(rad,"red");
+			int direct=1; //1=na prawo  -1 = na lewo
+			int interPozX=r.nextInt(100);
+			if(r.nextBoolean()) direct = -1;
+			interPozX = interPozX*direct;
+			a.getNode().setTranslateX(pozx+interPozX);
+			a.getNode().setTranslateY(pozy+r.nextInt(10));
+			a.vY = vY+r.nextInt(4)+1;
+			
+			((AsteroidDemolition)g).addToRespawnSprite(a);
+			
+		}*/
 	}
 
 }

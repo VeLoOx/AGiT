@@ -1,7 +1,10 @@
 package pl.agit.Game.World;
 
+import java.util.ArrayList;
+
 import pl.agit.Game.Sprites.Sprite;
 import pl.agit.Game.Sprites.SpriteManager;
+import pl.agit.Game.World.GUIElements.MainMenu;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -23,6 +26,7 @@ public abstract class GameWorld {
 
 	/** linia czasu petli gry */
 	private static Timeline gameLoop;
+	private boolean pause = false;
 
 	/** klatki na sekunde */
 	private final int framesPerSecond;
@@ -31,6 +35,12 @@ public abstract class GameWorld {
 	private final String windowTitle;
 
 	private final SpriteManager spriteManager = new SpriteManager();
+
+	private MainMenu mm = null;
+	
+	private long respawnCounter=0;
+	private long respawnLastCounter=0;
+	private long repsawnDuration = 50;
 
 	public GameWorld(final int fps, final String title) {
 
@@ -56,16 +66,18 @@ public abstract class GameWorld {
 
 			@Override
 			public void handle(javafx.event.Event event) {
+				respawnCounter++;
+				
 				revideGame();
-				
+
 				checkCollisions();
-				
+
 				updateSprites();
 
 				cleanupSprites();
-
-				respawnElements();
 				
+				respawnElements();
+
 				updateBehaviorSprites();
 			}
 
@@ -77,21 +89,43 @@ public abstract class GameWorld {
 
 	}
 
-	public abstract void initialize(final Stage primaryStage);
+	public abstract void initialize(final Stage primaryStage, MainMenu main);
 
-	
-	public void beginGameLoop() {
-		getGameLoop().play();
+	public abstract void setupInput(final Stage pm);
+
+	public abstract void cleanWorld();
+
+	public void setMainMenu(MainMenu m) {
+		mm = m;
 	}
 
+	public void returnToMenu() {
+		mm.toMenu();
+	}
 	
+	
+
+	public void beginGameLoop() {
+		getGameLoop().play();
+		pause = false;
+
+	}
+
+	public void pauseGameLoop() {
+		getGameLoop().pause();
+		pause = true;
+	}
+
+	public boolean isPause() {
+		return pause;
+	}
+
 	protected void updateSprites() {
 		for (Object sprite : spriteManager.getAllSprites()) {
 			handleUpdate((Sprite) sprite);
 		}
 	}
 
-	
 	protected void handleUpdate(Sprite sprite) {
 	}
 
@@ -103,11 +137,11 @@ public abstract class GameWorld {
 	protected void revideGame() {
 
 	}
-	
+
 	protected void updateBehaviorSprites() {
 
 	}
-	
+
 	protected void checkCollisions() {
 		// check other sprite's collisions
 		spriteManager.resetCollisionsToCheck();
@@ -120,12 +154,12 @@ public abstract class GameWorld {
 					// object as opposed to one hitting many objects.
 					// To be more accurate comment out the break statement.
 					break;
-					//return;
+					// return;
 				}
 			}
 		}
 	}
-	
+
 	protected boolean handleCollision(Sprite spriteA, Sprite spriteB) {
 		return false;
 	}
@@ -147,7 +181,7 @@ public abstract class GameWorld {
 	}
 
 	public Group getSceneElements() {
-		//System.out.println("POBRANO");
+		// System.out.println("POBRANO");
 		return sceneElements;
 	}
 

@@ -37,7 +37,7 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 	public void handleDeath(GameWorld gm){
 		super.handleDeath(gm);
 		noImplode(gm);
-		((AsteroidDemolition)gm).reductionMissile();
+		//((AsteroidDemolition)gm).reductionMissile();
 		//((AsteroidDemolition)gm).addScore(100);
 		
 		
