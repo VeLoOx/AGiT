@@ -3,6 +3,11 @@
 var byte2DArrayType = Java.type("byte[][]");
 var byte1DArrayType = Java.type("byte[]");
 
+	var map0 = new byte2DArrayType(3);
+		map0[0] = Java.to([0,0,0,0,0,0,0,0,0,0],"byte[]"),
+		map0[1] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]"),
+		map0[2] = Java.to([0,0,0,0,0,0,0,0,0,0],"byte[]");
+
 	var map1 = new byte2DArrayType(3);
 		map1[0] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]"),
 		map1[1] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]"),
@@ -26,9 +31,10 @@ var getMapList = function(){
 	var ArrayList = Java.type("java.util.ArrayList")
 	var lista = new ArrayList()
 	
+		//lista.add(map0);
 		lista.add(map1);
-		//lista.add(map2);
-		//lista.add(map3);
+		lista.add(map2);
+		lista.add(map3);
 	return lista;
 	
 }

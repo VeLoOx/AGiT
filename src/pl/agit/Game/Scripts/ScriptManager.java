@@ -11,6 +11,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import pl.agit.Game.Gamedef.GameConst;
+
 public class ScriptManager {
 
 	private Map <String, Invocable> scriptInvokeMap;
@@ -23,6 +25,19 @@ public class ScriptManager {
 		scriptInvokeMap = new HashMap();
 		engine = new ScriptEngineManager().getEngineByName("nashorn");
 		
+		
+		try {
+			this.addScript(GameConst.JS_ASTEROID_NAME,GameConst.JS_ASTEROID);
+			
+						
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

@@ -6,15 +6,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import pl.agit.Game.Gamedef.GameConst;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class ImageManager {
+public class ImageManager implements GameConst {
 	Map<String, Image> imagesMap = new HashMap<>();
 	private static ImageManager instance;
 
 	private ImageManager() {
-
+		this.loadImage(GFX_ASTEROID_NAME,GFX_ASTEROID);
 	}
 
 	public static ImageManager getImageManager() {

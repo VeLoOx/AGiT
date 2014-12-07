@@ -14,9 +14,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.script.ScriptException;
 
 import com.sun.javafx.font.FontConstants;
+import com.sun.javafx.runtime.*;
 import com.sun.scenario.effect.impl.prism.PrImage;
 
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -62,8 +64,9 @@ import pl.agit.Game.World.GUIElements.GameStats;
 import pl.agit.Game.World.GUIElements.MainMenu;
 
 public class AsteroidDemolition extends GameWorld implements GameConst {
-	
-	private ArrayList spriteToRespawnList = new ArrayList<>();
+
+	private ArrayList<Sprite> spriteToRespawnList = new ArrayList<>();
+	private ArrayList<Node> nodeToRespawnList = new ArrayList<>();
 
 	private GameStats gameStats;
 
@@ -82,7 +85,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	private int actualAlienMap = -1;
 
 	private int actualAsteroidRound = 0; // aktualna runda asteroid
-	private long asteroidTimeRound = 40000; // czas trwania calej rundy
+	private long asteroidTimeRound = 3000; // czas trwania calej rundy
 	private long lastAsteroidTime = 0; // czas rozpoczecia rundy
 
 	private long asteroidSubTimeGeneration = 1000; // czas regenerowania
@@ -296,7 +299,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	}
 
 	private void generateAlien() {
-
+		System.out.println("Generate map "+actualAlienMap+" time"+System.currentTimeMillis());
 		// zaladowanie mapy
 		byte[][] alienMap1 = alienMapList.get(actualAlienMap);
 
@@ -322,12 +325,9 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 				}
 				// System.out.print(alienMap1[c][r]);
 			}
-			getSpriteManager().addSprites(alTab.toArray());
-
-			for (int i = 0; i < alTab.size(); i++)
-				getSceneElements().getChildren().add(alTab.get(i).getNode());
-			// System.out.println();
-
+			addToRespawnSprite(alTab);
+			
+			useRespawnLists();
 		}
 
 	}
@@ -350,42 +350,42 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	// generowanie asteroid
 	private void generateAsteroids() {
-		if (System.currentTimeMillis() - lastAsteroidSubTimeGeneration < asteroidSubTimeGeneration)
-			return;
 
+		if (System.currentTimeMillis() - lastAsteroidSubTimeGeneration < asteroidSubTimeGeneration) {
+			// System.out.println("return from generating");
+			return;
+		}
+		
 		lastAsteroidSubTimeGeneration = System.currentTimeMillis();
-		Random random = new Random();
-		int anumb = random.nextInt(5) + 1;
-		Scene scene = getGameScene();
-		Double o = scene.getWidth();
+		//Random random = new Random();
+		int anumb = 4;
+		
+		Double o = 1200d;
 		Sprite[] astTab = new Sprite[anumb];
+		Asteroid ast = null;
+		
 		for (int i = 0; i < anumb; i++) {
 
-			Asteroid ast = null;
+			
 			try {
-				ast = (Asteroid) scrm.getScript(
-						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
-						"generateAsteroid1", o);
+				ast =(Asteroid) scrm.getScript(
+				GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
+				"generateAsteroid1", o);
 
+				
 				astTab[i] = ast;
-				;
 
 			} catch (NoSuchMethodException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// e.printStackTrace();
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 
 		}
 
-		// Sprite[] s = (Sprite[])astList.toArray() ;
-		getSpriteManager().addSprites(astTab);
-		// ast.node.toFront();
-
-		for (int i = 0; i < astTab.length; i++)
-			getSceneElements().getChildren().add(astTab[i].getNode());
+		addToRespawnSprite(astTab);
 
 	}
 
@@ -475,19 +475,47 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		sprite.update();
 
 	}
-	
-	public void addToRespawnSprite(Sprite s){
+
+	public void addToRespawnSprite(Sprite s) {
 		spriteToRespawnList.add(s);
+		nodeToRespawnList.add(s.getNode());
 	}
-	public void addToRespawnSprite(Asteroid[] s){
-		for(int i=0;i<s.length;i++)
-		spriteToRespawnList.add(s[i]);
+
+	public void addToRespawnSprite(Sprite[] s) {
+		for (int i = 0; i < s.length; i++) {
+			spriteToRespawnList.add(s[i]);
+			nodeToRespawnList.add(s[i].getNode());
+		}
+	}
+
+	public void addToRespawnSprite(List<Sprite> lista){
+		for(Sprite s:lista){
+			spriteToRespawnList.add(s);
+			nodeToRespawnList.add(s.getNode());
+		}
+	}
+
+	private void useRespawnLists() {
+
+		for (int i = 0; i < 5; i++) {
+			try {
+				getSpriteManager().addSprite(spriteToRespawnList.get(i));
+				getSceneElements().getChildren().add(nodeToRespawnList.get(i));
+
+				spriteToRespawnList.remove(i);
+				nodeToRespawnList.remove(i);
+
+			} catch (IndexOutOfBoundsException e) {
+				return;
+			}
+		}
+
 	}
 
 	// odzywanie elemntow
 	@Override
 	protected void respawnElements() {
-
+		useRespawnLists();
 		// if (asteroidCount == 0)
 		// generateAsteroids(); // dodawanie asteroid
 
@@ -497,27 +525,20 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		}
 
 		if (enableAsteroidGen) {
-			//Iterator<Sprite> i = spriteToRespawnList.iterator();
+			// Iterator<Sprite> i = spriteToRespawnList.iterator();
 			generateAsteroids();
 			enableAsteroidGen = false;
-			
-			int i=0;
-			while(i<1){
-				Sprite s=null;
-				try {
-					s = (Sprite) spriteToRespawnList.get(i);
-					} catch (Exception r){
-					
-				}
-				if(s==null) return;
-				spriteToRespawnList.remove(i);
-				getSpriteManager().addSprite(s);
-				getSceneElements().getChildren().add(s.getNode());
-				i++;
-			}
-			//spriteToRespawnList.clear();
-			
-			
+
+			/*
+			 * int i=0; while(i<1){ Sprite s=null; try { s = (Sprite)
+			 * spriteToRespawnList.get(i); } catch (Exception r){
+			 * 
+			 * } if(s==null) return; spriteToRespawnList.remove(i);
+			 * getSpriteManager().addSprite(s);
+			 * getSceneElements().getChildren().add(s.getNode()); i++; }
+			 */
+			// spriteToRespawnList.clear();
+
 		}
 		// alienCount=1;
 
@@ -537,7 +558,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					spriteB.handleDeath(this);
 				}
 				if (spriteB == ship) {
-					System.out.println("C ");
+					// System.out.println("C ");
 					ship.reduceEnergy(spriteA.getDamage());
 				}
 

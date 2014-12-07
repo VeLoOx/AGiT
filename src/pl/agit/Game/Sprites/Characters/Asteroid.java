@@ -44,34 +44,24 @@ public class Asteroid extends Sprite implements GameConst {
 		sphere = new Circle();
 
 					
-		im.loadImage(GFX_ASTEROID_NAME,GFX_ASTEROID);
+		
 		ImageView astView = new ImageView(im.getImage(GFX_ASTEROID_NAME));
 		astView.setFitHeight(radius*2);
 		astView.setFitWidth(radius*2);
-		astBook.getChildren().addAll(astView);
+		astBook.getChildren().add(astView);
 
 		this.radius = radius;
 		sphere.setRadius(radius);
 
 		node = astBook;
 		
-		try {
-			sm.addScript(GameConst.JS_ASTEROID_NAME,GameConst.JS_ASTEROID);
-						
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ScriptException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	public Asteroid(double radius, RadialGradient color) {
 		this(radius);
 
-		sphere.setFill(color);
+		//sphere.setFill(color);
 
 	}
 

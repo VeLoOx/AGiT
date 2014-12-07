@@ -38,10 +38,7 @@ public abstract class GameWorld {
 
 	private MainMenu mm = null;
 	
-	private long respawnCounter=0;
-	private long respawnLastCounter=0;
-	private long repsawnDuration = 50;
-
+	
 	public GameWorld(final int fps, final String title) {
 
 		framesPerSecond = fps;
@@ -66,7 +63,7 @@ public abstract class GameWorld {
 
 			@Override
 			public void handle(javafx.event.Event event) {
-				respawnCounter++;
+				respawnElements();
 				
 				revideGame();
 
@@ -76,9 +73,9 @@ public abstract class GameWorld {
 
 				cleanupSprites();
 				
-				respawnElements();
-
 				updateBehaviorSprites();
+				
+				
 			}
 
 		}); // oneFrame
