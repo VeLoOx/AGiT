@@ -35,19 +35,7 @@ public class SpaceShip extends Sprite implements GameConst {
 
 	public SpaceShip() {
 
-		// GRAFIKA
-//		String dir = new File("").getAbsolutePath(); // znalezienie sciaki
-//														// bezwzglednej do
-//														// projektu
-//		System.out.println(dir + GameConst.GFX_MAINSHIP);
-//		URL u = null;
-//		try {
-//			u = new File(dir + GameConst.GFX_MAINSHIP).toURI().toURL();
-//		} catch (MalformedURLException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		Image shipImage = new Image(u.toExternalForm());
+		
 		im.loadImage(GFX_MAINSHIP_NAME, GFX_MAINSHIP);
 		ImageView shipView = new ImageView(im.getImage(GFX_MAINSHIP_NAME));
 		
@@ -113,6 +101,8 @@ public class SpaceShip extends Sprite implements GameConst {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if(energy<=0) isDead=true;
 	}
 
 	public void addScore(int val) {
