@@ -21,7 +21,17 @@ var generateAsteroid1 = function(sceneWidth) {
 
 };
 
-
+var gameSequenceList = function(){
+	var LIST = Java.type("java.util.ArrayList");
+	var lista = new LIST();
+	
+	lista.add(1);
+	lista.add(0);
+	lista.add(0);
+	lista.add(1);
+	
+	return lista;
+}
 
 var returnAlienMapList = function (){
 	var mapNumbers = 3; // ile ma byc map

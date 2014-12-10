@@ -2,6 +2,7 @@ package pl.agit.Game.World.GUIElements;
 
 import java.awt.Event;
 
+import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -69,6 +70,16 @@ public class MainMenu {
 		mm = this;
 
 	}
+	
+	public Group getMainGroup(){
+		
+		menuGroup.getChildren().removeAll();
+		return menuGroup;
+	}
+	
+	public Scene getScene(){
+		return menuScene;
+	}
 
 	private EventHandler<ActionEvent> startClick() {
 
@@ -77,9 +88,9 @@ public class MainMenu {
 			@Override
 			public void handle(ActionEvent arg) {
 				// TODO Auto-generated method stub
-
+				((AsteroidDemolition) gm).resetWorld();
 				gm.initialize(myStage, mm);
-				myStage.setScene(gm.getGameScene());
+				//myStage.setScene(gm.getGameScene());
 				myStage.setFullScreen(true);
 				gm.setupInput(myStage);
 
@@ -99,8 +110,9 @@ public class MainMenu {
 				// TODO Auto-generated method stub
 
 				// gm.initialize(myStage);
-				myStage.setScene(gm.getGameScene());
-				myStage.setFullScreen(true);
+				//myStage.setScene(gm.getGameScene());
+				//myStage.setFullScreen(true);
+				menuScene.setRoot(gm.getSceneElements());
 				gm.setupInput(myStage);
 
 				// myStage.
@@ -128,10 +140,13 @@ public class MainMenu {
 	}
 
 	public void toMenu() {
-		myStage.setScene(menuScene);
 		
 		menuScene.setCursor(Cursor.DEFAULT);
-		myStage.setFullScreen(true);
+		//myStage.setScene(menuScene);
+		//myStage.getScene().setCursor(Cursor.DEFAULT);
+		//myStage.setFullScreen(true);
+		//myStage.getScene().setCursor(Cursor.DEFAULT);
+		menuScene.setRoot(menuGroup);
 		
 	}
 

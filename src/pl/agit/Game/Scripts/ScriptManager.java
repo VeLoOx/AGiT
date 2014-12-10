@@ -29,7 +29,9 @@ public class ScriptManager {
 		try {
 			this.addScript(GameConst.JS_ASTEROID_NAME,GameConst.JS_ASTEROID);
 			this.addScript(GameConst.JS_ALIENSHIP_NAME, GameConst.JS_ALIENSHIP);
-						
+			this.addScript(GameConst.JS_ASTEROID_DEMOLITION_NAME,
+					GameConst.JS_ASTEROID_DEMOLITION);
+			this.addScript(GameConst.JS_ALIEN_MAP_NAME, GameConst.JS_ALIEN_MAP);			
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

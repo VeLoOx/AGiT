@@ -42,8 +42,8 @@ public class SpaceShip extends Sprite implements GameConst {
 		
 
 		shipBook.getChildren().addAll(shipView);
-		shipBook.setTranslateX(100);
-		shipBook.setTranslateY(100);
+		shipBook.setTranslateX(550);
+		shipBook.setTranslateY(550);
 		shipBook.setCache(true);
 		shipBook.setCacheHint(CacheHint.SPEED);
 		node = shipBook;

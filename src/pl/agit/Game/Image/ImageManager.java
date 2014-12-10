@@ -17,6 +17,7 @@ public class ImageManager implements GameConst {
 	private ImageManager() {
 		this.loadImage(GFX_ASTEROID_NAME,GFX_ASTEROID);
 		this.loadImage(GFX_ALIENSHIP1_NAME, GFX_ALIENSHIP1);
+		this.loadImage(GFX_MAINSPACE_NAME, GFX_MAINSPACE);
 	}
 
 	public static ImageManager getImageManager() {
