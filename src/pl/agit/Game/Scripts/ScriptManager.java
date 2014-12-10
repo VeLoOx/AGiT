@@ -28,7 +28,7 @@ public class ScriptManager {
 		
 		try {
 			this.addScript(GameConst.JS_ASTEROID_NAME,GameConst.JS_ASTEROID);
-			
+			this.addScript(GameConst.JS_ALIENSHIP_NAME, GameConst.JS_ALIENSHIP);
 						
 			
 		} catch (FileNotFoundException e) {

@@ -2,6 +2,7 @@ package pl.agit.Game.Sprites.Characters;
 
 import java.io.FileNotFoundException;
 
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
@@ -43,6 +44,8 @@ public class SpaceShip extends Sprite implements GameConst {
 		shipBook.getChildren().addAll(shipView);
 		shipBook.setTranslateX(100);
 		shipBook.setTranslateY(100);
+		shipBook.setCache(true);
+		shipBook.setCacheHint(CacheHint.SPEED);
 		node = shipBook;
 
 		// SKRYPTY
@@ -72,6 +75,11 @@ public class SpaceShip extends Sprite implements GameConst {
 			mpozY = maxY - this.node.getBoundsInParent().getHeight();
 		shipBook.setTranslateY(mpozY);
 
+	}
+	
+	public void parkSpaceShip(){
+		shipBook.setTranslateX(550);
+		shipBook.setTranslateY(550);
 	}
 
 	private void levelUpdate(int sc) {

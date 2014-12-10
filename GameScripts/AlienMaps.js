@@ -10,7 +10,7 @@ var byte1DArrayType = Java.type("byte[]");
 
 	var map1 = new byte2DArrayType(3);
 		map1[0] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]"),
-		map1[1] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]"),
+		map1[1] = Java.to([1,1,0,0,0,0,0,0,1,1],"byte[]"),
 		map1[2] = Java.to([1,0,0,0,0,0,0,0,0,1],"byte[]");
 	
 	var map2 = new byte2DArrayType(3);

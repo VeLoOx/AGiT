@@ -1,5 +1,7 @@
 package pl.agit.Game.World.GUIElements;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -25,12 +27,15 @@ public class GameStats {
 	
 	private Label spaceLevelCounter;
 	private Label spaceLevelCounterName;
+	
+	private Label time;
 
 
 	private double targetX;
 	private double targetY;
 	
 	private VBox stats = new VBox();
+	private HBox gamePanel = new HBox();
 
 	public GameStats(double sizeX, double sizeY) {
 		asteroidCounter = new Label("0");
@@ -50,8 +55,13 @@ public class GameStats {
 		
 		spaceLevelCounter = new Label("0");
 		spaceLevelCounterName = new Label("Ship LEVEL:");
+		
+		time = new Label("");
+		time.getStyleClass().add("gamePanelTime");
+		time.setTranslateX(650);
+		time.setTranslateY(150);
 
-		asteroidCounter.getStyleClass().add(".ac {-fx-font-size: 30pt;}");
+		//asteroidCounter.getStyleClass().add(".ac {-fx-font-size: 30pt;}");
 
 		targetX = 10;
 		targetY = sizeY - 50;
@@ -90,6 +100,59 @@ public class GameStats {
 	
 	public VBox getVBox(){
 		return stats;
+	}
+	
+	public HBox getHBox(){
+		return gamePanel;
+	}
+	
+	public Label getTimeText(){
+		return time;
+		
+	}
+	
+	public void updateTime(long t){
+		time.setText(String.valueOf(t));
+	}
+	
+	public HBox getGamePanel(){
+		gamePanel.setTranslateX(20);
+		gamePanel.setTranslateY(740);
+		
+		spaceEnergyCounterName.getStyleClass().add("gamePanelText");
+		spaceScoreCounterName.getStyleClass().add("gamePanelText");
+		spaceLevelCounterName.getStyleClass().add("gamePanelText");
+		
+		spaceEnergyCounter.getStyleClass().add("gamePanelTextVal");
+		spaceScoreCounter.getStyleClass().add("gamePanelTextVal");
+		spaceLevelCounter.getStyleClass().add("gamePanelTextVal");
+		
+		
+		
+		HBox h1 = new HBox();
+		h1.setSpacing(12);
+		h1.getChildren().add(spaceEnergyCounterName);
+		h1.getChildren().add(spaceEnergyCounter);
+		//h1.setSpacing(12);
+		HBox h2 = new HBox();
+		h2.setSpacing(12);
+		h2.getChildren().add(spaceScoreCounterName);
+		h2.getChildren().add(spaceScoreCounter);
+		HBox h3 = new HBox();
+		h3.setSpacing(12);
+		h3.getChildren().add(spaceLevelCounterName);
+		h3.getChildren().add(spaceLevelCounter);
+		
+		gamePanel.setSpacing(20);
+		gamePanel.setPadding(new Insets(0, 20, 10, 20)); 
+		gamePanel.setAlignment(Pos.BOTTOM_CENTER);
+		gamePanel.getChildren().add(h1);
+		gamePanel.getChildren().add(h2);
+		gamePanel.getChildren().add(h3);
+		
+		gamePanel.getStyleClass().add("gamePanel");
+		
+		return gamePanel;
 	}
 
 	public VBox getStats() {

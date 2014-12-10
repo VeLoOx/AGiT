@@ -1,5 +1,7 @@
 package pl.agit.Game.World;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -21,6 +23,8 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -29,6 +33,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
@@ -67,9 +73,10 @@ import pl.agit.Game.World.GUIElements.MainMenu;
 public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	private ArrayList<Sprite> spriteToRespawnList = new ArrayList<>();
-	//private ArrayList<Node> nodeToRespawnList = new ArrayList<>();
+	// private ArrayList<Node> nodeToRespawnList = new ArrayList<>();
 
 	private GameStats gameStats;
+	private SpaceShip ship = new SpaceShip();
 
 	private int asteroidCount = 0;
 	private int missileCount = 0;
@@ -83,21 +90,22 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	private boolean WIN_STATE = false;
 	private boolean FIRSTROUND_STATE = true;
 
-	private SpaceShip ship = new SpaceShip();
-
 	private List<Byte> stageSequenceList = new ArrayList<>();
 	private ArrayList<byte[][]> alienMapList = new ArrayList<byte[][]>();
 	private int actualAlienMap = -1;
 
 	private int actualAsteroidRound = 0; // aktualna runda asteroid
+
+	// TIMERY
 	private long asteroidTimeRound = 5000; // czas trwania calej rundy
 	private long lastAsteroidTime = 0; // czas rozpoczecia rundy
 	private long timeDead = 0;
-	private long asteroidSubTimeGeneration = 1000; // czas regenerowania
+	private long asteroidSubTimeGeneration = 1000; // czas regenerowania//
 													// asteroid
 	private long lastAsteroidSubTimeGeneration = 0; // ostatni czas regenracji
-	
 	private long lastRespaw = 0;
+	private long parkShipTime = 0;
+	private long waitParkTime = 4000;
 
 	Image backgroundImage;
 	ImageView backView;
@@ -140,6 +148,8 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	@Override
 	public void initialize(final Stage primaryStage, MainMenu m) {
 		final Timeline gameLoop = getGameLoop();
+		
+		primaryStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 
 		setMainMenu(m); // odwolanie do glownego menu
 
@@ -148,11 +158,15 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		Scene sc = new Scene(getSceneElements());
 		setGameScene(sc);
 		getGameScene().getStylesheets().addAll(GameConst.CSS_PACKAGE_PATH);
+		getGameScene().setCursor(Cursor.NONE);
+		//getSceneElements().setCursor(Cursor.NONE);
 
 		// dodanie statystyk
 		gameStats = new GameStats(primaryStage.getWidth(),
 				primaryStage.getHeight());
 		getSceneElements().getChildren().add(gameStats.getStats());
+		getSceneElements().getChildren().add(gameStats.getGamePanel());
+		getSceneElements().getChildren().add(gameStats.getTimeText());
 
 		// doanie tla
 		backView = new ImageView(im.getImage(GFX_MAINSPACE_NAME));
@@ -204,6 +218,18 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		else
 			ALIEN_PART = false;
 		stageIndex++;
+
+		parkShipTime = System.currentTimeMillis();
+		
+		Robot r;
+		try {
+			r = new Robot();
+			r.mouseMove(550, 550);
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
@@ -281,6 +307,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		return new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				
 				ship.setMpozX(event.getX());
 				ship.setMpozY(event.getY());
 				gameStats.updateMousePos(event.getX(), event.getY());
@@ -304,7 +331,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		// zamkniecie okna krzyzykiem
 		return new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
-
+				getGameScene().setCursor(Cursor.DEFAULT);
 				sm.shutdown();
 				System.out.println("Stage is closing");
 			}
@@ -318,11 +345,14 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					// sm.shutdown();
 					// System.out.println("Stage is closing");
 					// pm.close();
+					getGameScene().setCursor(Cursor.DEFAULT);
 					getGameLoop().pause();
 					returnToMenu();
+					
 				}
 
 				if (ke.getCode() == KeyCode.TAB) {
+					getGameScene().setCursor(Cursor.DEFAULT);
 					// boolean vis = gameStats.getStats().isVisible();
 					if (gameStats.getVBox().isVisible())
 						gameStats.getVBox().setVisible(false);
@@ -371,9 +401,8 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 			}
 			addToRespawnSprite(alTab);
 
-			useRespawnLists();
 		}
-
+		useRespawnLists();
 	}
 
 	private void aliensFiring() {
@@ -452,12 +481,9 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 		}
 
-		
-		
-
 		if (ALIEN_PART) {
 			alienCount = SpriteManager.getListObject(AlienShip.class).size();
-			
+
 			if (FIRSTROUND_STATE) {
 				enableAlienGen = true;
 				enableAsteroidGen = false;
@@ -485,6 +511,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					enableAlienGen = true;
 					enableAsteroidGen = false;
 					actualAlienMap++;
+					parkShipTime=System.currentTimeMillis();
 				}
 
 			}
@@ -511,7 +538,9 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					WIN_STATE = true;
 					return;
 				}
-
+				
+				if(asteroidCount!=0) return;
+				
 				if (stageSequenceList.get(stageIndex) == 1)
 					ALIEN_PART = true;
 				else
@@ -533,6 +562,33 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	// uaktualnianie aktorow
 	@Override
 	protected void handleUpdate(Sprite sprite) {
+		gameStats.getTimeText().setVisible(false);
+		
+		long time = System.currentTimeMillis() - parkShipTime;
+		
+		if ( time < waitParkTime) {
+			gameStats.getTimeText().setVisible(true);
+			gameStats.updateTime((waitParkTime/1000)-time/1000);
+			ship.parkSpaceShip();
+			try {
+				Robot r = new Robot();
+				r.mouseMove(550, 550);
+				
+			} catch (AWTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+
+		if (sprite instanceof SpaceShip) {
+			
+			SpaceShip sphere = (SpaceShip) sprite;
+			if (sphere.handleBoundsMeet(getGameScene().getWidth(),
+					getGameScene().getHeight() - 60)) {
+
+			}
+		}
 
 		if (sprite instanceof Asteroid) {
 			Asteroid sphere = (Asteroid) sprite;
@@ -551,13 +607,6 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 				((Missile) sprite).handleDeath(this);
 
 		}
-		if (sprite instanceof SpaceShip) {
-			SpaceShip sphere = (SpaceShip) sprite;
-			if (sphere.handleBoundsMeet(getGameScene().getWidth(),
-					getGameScene().getHeight() - 60)) {
-
-			}
-		}
 
 		if (sprite instanceof AlienMissile) {
 			AlienMissile sphere = (AlienMissile) sprite;
@@ -573,20 +622,20 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	public void addToRespawnSprite(Sprite s) {
 		spriteToRespawnList.add(s);
-		//nodeToRespawnList.add(s.getNode());
+		// nodeToRespawnList.add(s.getNode());
 	}
 
 	public void addToRespawnSprite(Sprite[] s) {
 		for (int i = 0; i < s.length; i++) {
 			spriteToRespawnList.add(s[i]);
-			//nodeToRespawnList.add(s[i].getNode());
+			// nodeToRespawnList.add(s[i].getNode());
 		}
 	}
 
 	public void addToRespawnSprite(List<Sprite> lista) {
 		for (Sprite s : lista) {
 			spriteToRespawnList.add(s);
-			//nodeToRespawnList.add(s.getNode());
+			// nodeToRespawnList.add(s.getNode());
 		}
 	}
 
@@ -595,10 +644,11 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		for (int i = 0; i < 2; i++) {
 			try {
 				getSpriteManager().addSprite(spriteToRespawnList.get(i));
-				getSceneElements().getChildren().add(spriteToRespawnList.get(i).getNode());
+				getSceneElements().getChildren().add(
+						spriteToRespawnList.get(i).getNode());
 
 				spriteToRespawnList.remove(i);
-				//nodeToRespawnList.remove(i);
+				// nodeToRespawnList.remove(i);
 
 			} catch (IndexOutOfBoundsException e) {
 				return;
@@ -611,7 +661,6 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	@Override
 	protected void respawnElements() {
 		useRespawnLists();
-		
 
 		if (enableAlienGen) {
 			generateAlien();

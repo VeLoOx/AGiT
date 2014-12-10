@@ -9,6 +9,8 @@ import java.util.Random;
 import javax.script.ScriptException;
 
 import javafx.geometry.Rectangle2D;
+import javafx.scene.CacheHint;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -35,6 +37,7 @@ public class AlienShip extends Sprite implements GameConst {
 	private ScriptManager scrm = ScriptManager.getScriptManager();
 	private ImageManager im = ImageManager.getImageManager();
 	private ImageView imageView;
+	
 	private double scW; // maks szerokosc poruszania
 	private double scH; // maks wysokosc poruszania
 
@@ -51,10 +54,12 @@ public class AlienShip extends Sprite implements GameConst {
 	
 	public long fireTime = 5000;
 	public long lastFireTime=System.currentTimeMillis();
+	
+	private long createTime=0;
 
 	private AlienShip() {
 		
-		im.loadImage(GFX_ALIENSHIP1_NAME, GFX_ALIENSHIP1);
+		
 
 		cellClips[0] = new Rectangle2D(0 * 86, 0, 86, 100); // normlany
 		cellClips[1] = new Rectangle2D(1 * 86, 0, 86, 100); // uszkodzony
@@ -72,14 +77,7 @@ public class AlienShip extends Sprite implements GameConst {
 		
 		node.setVisible(true);
 
-		// SKRYPTY
-
-		try {
-			scrm.addScript(GameConst.JS_ALIENSHIP_NAME, GameConst.JS_ALIENSHIP);
-		} catch (ScriptException | FileNotFoundException e) {
-			System.out.println("blad skryptu");
-			e.printStackTrace();
-		}
+		createTime=System.currentTimeMillis();		
 	}
 
 	public AlienShip(double startx, double starty) {
@@ -88,6 +86,9 @@ public class AlienShip extends Sprite implements GameConst {
 		this.starty = starty;
 		alienBook.setTranslateX(startx);
 		alienBook.setTranslateY(starty);
+		alienBook.setCache(true);
+		alienBook.setCacheHint(CacheHint.SPEED);
+		
 
 		scW = 1200;
 		scH = 500;
@@ -95,6 +96,8 @@ public class AlienShip extends Sprite implements GameConst {
 
 	@Override
 	public void update() {
+		
+		if(System.currentTimeMillis()-createTime<2500) return;
 		//skrypt
 		Object[] o = {this,startx,starty,scW};
 		try {

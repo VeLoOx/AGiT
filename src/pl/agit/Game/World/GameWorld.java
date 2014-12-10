@@ -11,6 +11,8 @@ import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -46,6 +48,8 @@ public abstract class GameWorld {
 		windowTitle = title;
 
 		// create and set timeline for the game loop
+		
+		
 
 		buildAndSetGameLoop();
 
@@ -63,10 +67,10 @@ public abstract class GameWorld {
 
 			@Override
 			public void handle(javafx.event.Event event) {
+				revideGame();
+				
 				respawnElements();
 				
-				revideGame();
-
 				checkCollisions();
 
 				updateSprites();
@@ -97,6 +101,9 @@ public abstract class GameWorld {
 	}
 
 	public void returnToMenu() {
+		getGameScene().setCursor(Cursor.DEFAULT);
+		getGameScene().cursorProperty().set(Cursor.DEFAULT);
+		
 		mm.toMenu();
 	}
 	
@@ -184,6 +191,8 @@ public abstract class GameWorld {
 
 	public void setSceneElements(Group sceneElements) {
 		this.sceneElements = sceneElements;
+		sceneElements.setCache(true);
+		sceneElements.setCacheHint(CacheHint.SPEED);
 	}
 
 	public static Timeline getGameLoop() {

@@ -5,9 +5,13 @@ import java.awt.Event;
 import pl.agit.Game.World.GameWorld;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -58,6 +62,7 @@ public class MainMenu {
 		
 		myStage = primaryStage;
 		myStage.setFullScreen(true);
+		myStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 		
 		gm = g;
 
@@ -116,6 +121,7 @@ public class MainMenu {
 				gm.getGameLoop().stop();
 				gm.cleanWorld();
 				myStage.close();
+				
 			}
 
 		};
@@ -123,7 +129,10 @@ public class MainMenu {
 
 	public void toMenu() {
 		myStage.setScene(menuScene);
+		
+		menuScene.setCursor(Cursor.DEFAULT);
 		myStage.setFullScreen(true);
+		
 	}
 
 }

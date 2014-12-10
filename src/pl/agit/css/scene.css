@@ -8,4 +8,27 @@
 
 
 
-.hbox {-fx-background-color: #8fbc8f; -fx-padding: 15; -fx-spacing: 10;}
+.gamePanel {
+	-fx-padding: 0; 
+	-fx-spacing: 33; 
+	
+	
+	}
+	
+.gamePanelText{
+	-fx-text-fill: yellow;
+	-fx-font: bold italic 15pt "Arial";  
+	-fx-effect: dropshadow( one-pass-box , red , 8 , 0.0 , 2 , 0 );
+}
+
+.gamePanelTextVal{
+	-fx-text-fill: red;
+	-fx-font: bold 17pt "Arial";  
+	-fx-effect: dropshadow( one-pass-box , gray , 4 , 0.2 , 1 , 2 );
+}
+
+.gamePanelTime{
+	-fx-text-fill: blue;
+	-fx-font: bold italic 45pt "Comic Sans";  
+	-fx-effect: dropshadow( one-pass-box , yellow , 8 , 0.0 , 2 , 0 );
+}
