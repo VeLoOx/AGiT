@@ -4,6 +4,32 @@ var generateAsteroid1 = function(sceneWidth) {
 	var ASTEROID = Java.type("pl.agit.Game.Sprites.Characters.Asteroid");
 	var ast = new ASTEROID(getRandomInt(5, 20), "red");
 
+	
+	//var CIRCLE = Java.type("javafx.scene.shape.Circle");
+	var node = ast.getNode();
+
+	ast.vX = 0;
+	ast.vY = getRandomArbitrary(1, 7);
+	newX = getRandomInt(50, (sceneWidth - ast.getRadius()));
+	newY = 10;
+
+	node.setTranslateX(newX);
+	node.setTranslateY(newY);
+	//node.setVisible(true);
+	// circle.setId(ast.toString());
+
+	return ast;
+
+};
+
+var generateAsteroidsPool = function(sceneWidth) {
+	var ASTEROID = Java.type("pl.agit.Game.Sprites.Characters.Asteroid");
+	
+	var ArrayList = Java.type("java.util.ArrayList");
+	var lista = new ArrayList();
+	
+	var ast = new ASTEROID(getRandomInt(5, 20), "red");
+
 	//var CIRCLE = Java.type("javafx.scene.shape.Circle");
 	var node = ast.getNode();
 

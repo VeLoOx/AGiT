@@ -151,6 +151,31 @@ public class SpaceShip extends Sprite implements GameConst {
 		return m;
 
 	}
+	
+	public BigMissile fire2(Boolean dir) { //true prawo
+		
+		int d = 1;
+		if(!dir) d = -1;
+
+		Object[] o = { mpozX, mpozY,
+				shipBook.getChildren().get(0).getBoundsInLocal().getWidth(),d };
+		BigMissile m = null;
+
+		try {
+			m = (BigMissile) scrm.getScript(GameConst.JS_MAINSHIP_NAME)
+					.invokeFunction("fire2", o);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sm.playSound("laser");
+
+		return m;
+
+	}
 
 	public Circle getAsCircle() {
 		Circle c = new Circle(shipBook.getBoundsInLocal().getWidth() / 2);

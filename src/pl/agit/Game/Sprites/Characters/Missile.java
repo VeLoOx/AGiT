@@ -7,7 +7,7 @@ import pl.agit.Game.World.GameWorld;
 
 public class Missile extends Sprite {
 	
-	private Circle bullet;
+	Circle bullet;
 	
 	private double damage;
 	
@@ -31,10 +31,13 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 	public void update() {
 		// TODO Auto-generated method stub
 		node.setTranslateY(node.getTranslateY()-vY);
+		//node.setTranslateX(node.getTranslateX()+vX);
 		
 	}
 	
 	public void handleDeath(GameWorld gm){
+		
+		
 		super.handleDeath(gm);
 		noImplode(gm);
 		//((AsteroidDemolition)gm).reductionMissile();
@@ -44,6 +47,9 @@ public Missile(double radius,double x, double y, double vX, double vY) {
 	}
 	
 	public boolean handleBoundsMeet(double wx, double hy){
+		//if (this.node.getTranslateX() > this.node.getBoundsInParent().getWidth()) vX = -vX;
+		//if (this.node.getTranslateX() < 0) vX = -vX;
+		
 		if (this.node.getTranslateY() <-this.node.getBoundsInParent().getHeight() ) {
               
           	  return true;

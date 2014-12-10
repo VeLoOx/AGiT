@@ -65,6 +65,7 @@ import pl.agit.Game.Sprites.SpriteManager;
 import pl.agit.Game.Sprites.Characters.AlienMissile;
 import pl.agit.Game.Sprites.Characters.AlienShip;
 import pl.agit.Game.Sprites.Characters.Asteroid;
+import pl.agit.Game.Sprites.Characters.BigMissile;
 import pl.agit.Game.Sprites.Characters.Missile;
 import pl.agit.Game.Sprites.Characters.SpaceShip;
 import pl.agit.Game.World.GUIElements.GameStats;
@@ -73,6 +74,8 @@ import pl.agit.Game.World.GUIElements.MainMenu;
 public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	private ArrayList<Sprite> spriteToRespawnList = new ArrayList<>();
+	private ArrayList<Asteroid> asteroids = new ArrayList<>();
+	
 	// private ArrayList<Node> nodeToRespawnList = new ArrayList<>();
 
 	private GameStats gameStats;
@@ -304,6 +307,17 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					getSpriteManager().addSprites(s);
 					// dodanie pocisku do listy spritow
 					getSceneElements().getChildren().add(m.node);
+					missileCount++;
+				}
+				
+				if (event.getButton() == MouseButton.SECONDARY) {
+					BigMissile m1 = ship.fire2(true);
+					BigMissile m2 = ship.fire2(false);
+					Sprite[] s = { m1,m2 };
+					getSpriteManager().addSprites(s);
+					// dodanie pocisku do listy spritow
+					getSceneElements().getChildren().add(m1.node);
+					getSceneElements().getChildren().add(m2.node);
 					missileCount++;
 				}
 			}
@@ -675,7 +689,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		super.cleanupSprites();
 
 		gameStats.updateAsteroidCounter(asteroidCount);
-		gameStats.updateMissileCounter(missileCount);
+		gameStats.updateMissileCounter(getSpriteManager().getListObject(Missile.class).size()+getSpriteManager().getListObject(BigMissile.class).size());
 		gameStats.updateSpaceEnergyCounter(ship.getEnergy());
 		gameStats.updateSpaceScoreCounter(ship.getScore());
 		gameStats.updateSpaceLevelCounter(ship.getLevel());
