@@ -23,6 +23,8 @@ public class SpaceShip extends Sprite implements GameConst {
 	private double mpozY = 500;
 
 	private double energy = 100;
+	private double bigMissilePool = 10;
+	
 	private int score = 0;
 	private int level = 0;
 	private int previousLevelScore = 0;
@@ -92,6 +94,7 @@ public class SpaceShip extends Sprite implements GameConst {
 		if (sc == (previousLevelScore * LEVEL_UPGRADE_JUMP)) {
 			previousLevelScore = sc;
 			level++;
+			bigMissilePool = bigMissilePool+level;
 		}
 	}
 
@@ -152,8 +155,19 @@ public class SpaceShip extends Sprite implements GameConst {
 
 	}
 	
+	public double getBigMissilePool(){
+		return bigMissilePool;
+	}
+	
+	public boolean ableToBigFire(){
+		if(bigMissilePool<1) return false; else return true;
+		//bigMissilePool--;
+	}
+	
 	public BigMissile fire2(Boolean dir) { //true prawo
 		
+		bigMissilePool--;
+		if (bigMissilePool<0) bigMissilePool=0;		
 		int d = 1;
 		if(!dir) d = -1;
 
@@ -190,37 +204,7 @@ public class SpaceShip extends Sprite implements GameConst {
 		return false;
 	}
 
-	// @Override
-	// public boolean collide(Sprite other, GameWorld gm) {
-	//
-	// if (other instanceof AlienMissile) {
-	// boolean val = collide((AlienMissile) other);
-	// if (val)
-	// // ((AsteroidDemolition) gm).addScore(50);
-	// reduceEnergy(other.getDamage());
-	// return val;
-	// }
-	//
-	// return false;
-	// }
-	//
-	// private boolean collide(AlienMissile other) {
-	// // //jesli ukryty to nie koliduje
-	// if (!node.isVisible() || !other.node.isVisible()) {
-	// return false;
-	// }
-	//
-	// // kolizje zalezne od rozmiaru
-	// Circle otherSphere = other.getAsCircle();
-	// Circle thisSphere = getAsCircle();
-	// double dx = otherSphere.getTranslateX() - thisSphere.getTranslateX();
-	// double dy = otherSphere.getTranslateY() - thisSphere.getTranslateY();
-	// double distance = Math.sqrt(dx * dx + dy * dy);
-	// double minDist = otherSphere.getRadius() + thisSphere.getRadius() + 3;
-	//
-	// return (distance < minDist);
-	// }
-
+	
 	public double getMpozX() {
 		return mpozX;
 	}

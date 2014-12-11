@@ -22,11 +22,22 @@ var generateAsteroid1 = function(sceneWidth) {
 
 };
 
-var generateAsteroidsPool = function(sceneWidth) {
+var generateAsteroidPos = function (ast, sceneWidth){
+	newX = getRandomInt(50, (sceneWidth - ast.getRadius()));
+	newY = -30;
+	
+	ast.getNode().setTranslateX(newX);
+	ast.getNode().setTranslateY(newY);
+	ast.getNode().setVisible(true);
+}
+
+var generateAsteroidsPool = function() {
 	var ASTEROID = Java.type("pl.agit.Game.Sprites.Characters.Asteroid");
 	
 	var ArrayList = Java.type("java.util.ArrayList");
 	var lista = new ArrayList();
+	
+	for(i=0;i<35;i++){
 	
 	var ast = new ASTEROID(getRandomInt(5, 20), "red");
 
@@ -35,15 +46,17 @@ var generateAsteroidsPool = function(sceneWidth) {
 
 	ast.vX = 0;
 	ast.vY = getRandomArbitrary(1, 7);
-	newX = getRandomInt(50, (sceneWidth - ast.getRadius()));
-	newY = 10;
+	newX = 0;
+	newY = -30;
 
 	node.setTranslateX(newX);
 	node.setTranslateY(newY);
 	//node.setVisible(true);
 	// circle.setId(ast.toString());
-
-	return ast;
+	node.setVisible(false);
+	lista.add(ast);
+	}
+	return lista;
 
 };
 
@@ -51,7 +64,7 @@ var gameSequenceList = function(){
 	var LIST = Java.type("java.util.ArrayList");
 	var lista = new LIST();
 	
-	lista.add(1);
+	lista.add(0);
 	lista.add(0);
 	lista.add(0);
 	lista.add(1);

@@ -28,6 +28,9 @@ public class GameStats {
 	private Label spaceLevelCounter;
 	private Label spaceLevelCounterName;
 	
+	private Label bigShotCounter;
+	private Label bigShotCounterName;
+	
 	private Label time;
 
 
@@ -55,6 +58,9 @@ public class GameStats {
 		
 		spaceLevelCounter = new Label("0");
 		spaceLevelCounterName = new Label("Ship LEVEL:");
+		
+		bigShotCounter = new Label("0");
+		bigShotCounterName = new Label("Big SHOT:");
 		
 		time = new Label("");
 		time.getStyleClass().add("gamePanelTime");
@@ -98,6 +104,11 @@ public class GameStats {
 		spaceLevelCounter.setText(Double.toString(val));
 	}
 	
+	public void updateBigShotCounter(double val) {
+		int i = (int) val;
+		bigShotCounter.setText(Integer.toString(i));
+	}
+	
 	public VBox getVBox(){
 		return stats;
 	}
@@ -122,10 +133,12 @@ public class GameStats {
 		spaceEnergyCounterName.getStyleClass().add("gamePanelText");
 		spaceScoreCounterName.getStyleClass().add("gamePanelText");
 		spaceLevelCounterName.getStyleClass().add("gamePanelText");
+		bigShotCounterName.getStyleClass().add("gamePanelText");
 		
 		spaceEnergyCounter.getStyleClass().add("gamePanelTextVal");
 		spaceScoreCounter.getStyleClass().add("gamePanelTextVal");
 		spaceLevelCounter.getStyleClass().add("gamePanelTextVal");
+		bigShotCounter.getStyleClass().add("gamePanelTextVal");
 		
 		
 		
@@ -142,6 +155,10 @@ public class GameStats {
 		h3.setSpacing(12);
 		h3.getChildren().add(spaceLevelCounterName);
 		h3.getChildren().add(spaceLevelCounter);
+		HBox h4 = new HBox();
+		h4.setSpacing(12);
+		h4.getChildren().add(bigShotCounterName);
+		h4.getChildren().add(bigShotCounter);
 		
 		gamePanel.setSpacing(20);
 		gamePanel.setPadding(new Insets(0, 20, 10, 20)); 
@@ -149,6 +166,7 @@ public class GameStats {
 		gamePanel.getChildren().add(h1);
 		gamePanel.getChildren().add(h2);
 		gamePanel.getChildren().add(h3);
+		gamePanel.getChildren().add(h4);
 		
 		gamePanel.getStyleClass().add("gamePanel");
 		

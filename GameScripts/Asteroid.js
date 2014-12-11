@@ -17,13 +17,17 @@ var generateShatter = function(pozx, pozy, vY, bigAstRadius){
 				
 		var ast = new ASTEROID(rad, "red");
 		direct=1; //1=na prawo  -1 = na lewo
-		interPozX=getRandomInt(30, 130);
+		interPozX=getRandomInt(50, 130);
 		if(getRandomInt(0, 1)==1) direct = -1;
 		
 		interPozX = interPozX*direct;
 		ast.getNode().setTranslateX(pozx+interPozX);
-		ast.getNode().setTranslateY(pozy+getRandomInt(1, 10));
+		ast.getNode().setTranslateY(pozy+getRandomInt(-1, -10));
 		ast.vY = vY+getRandomInt(2, 5);
+		ast.vX = 0
+		if(getRandomInt(0,3)==3) {
+			ast.vX = getRandomInt(-4,2)+1;
+		}
 		
 		astTab[i] = ast;		
 	}

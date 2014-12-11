@@ -227,11 +227,52 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 			ALIEN_PART = false;
 		stageIndex++;
 
+		
+		
+		
+		// inicjalizacja puli asteroid
+		try {
+			asteroids = (ArrayList<Asteroid>) scrm.getScript(JS_ASTEROID_DEMOLITION_NAME).invokeFunction("generateAsteroidsPool");
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		Iterator<Asteroid> i = asteroids.iterator();
+		while(i.hasNext()){
+			Asteroid a = i.next();
+			getSpriteManager().addSprite(a);
+			getSceneElements().getChildren().add(a.getNode());
+		}
+		
 		parkShipTime = System.currentTimeMillis();
-		
-		
-		
 
+	}
+	
+	private Asteroid getNoVisibleAsteroid(){
+		Iterator<Asteroid> i = asteroids.iterator();
+		while(i.hasNext()){
+			Asteroid a = i.next();
+			if(!a.getNode().isVisible()) return a;
+		}
+		
+		return null;
+	}
+	
+	private int getNumbVisibleAsteroid(){
+		
+		int i = 0;
+		Iterator<Asteroid> it = asteroids.iterator();
+		while(it.hasNext()){
+			Asteroid a = it.next();
+			if(a.getNode().isVisible()) i++;
+		}
+		
+		return i;
 	}
 
 	public void addScore(int val) {
@@ -311,6 +352,8 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 				}
 				
 				if (event.getButton() == MouseButton.SECONDARY) {
+					if(!ship.ableToBigFire()) return;
+					
 					BigMissile m1 = ship.fire2(true);
 					BigMissile m2 = ship.fire2(false);
 					Sprite[] s = { m1,m2 };
@@ -449,21 +492,29 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		}
 
 		lastAsteroidSubTimeGeneration = System.currentTimeMillis();
-		// Random random = new Random();
+		
 		int anumb = 4;
 
-		Double o = 1200d;
-		Sprite[] astTab = new Sprite[anumb];
-		Asteroid ast = null;
+		Double d = 1200d;
+		
+		
 
 		for (int i = 0; i < anumb; i++) {
-
+			
+			Asteroid ast = getNoVisibleAsteroid();
+			Object[] o = {ast,d};
 			try {
-				ast = (Asteroid) scrm.getScript(
+				/*ast = (Asteroid) scrm.getScript(
 						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
 						"generateAsteroid1", o);
 
-				astTab[i] = ast;
+				astTab[i] = ast;*/
+				
+				scrm.getScript(
+						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
+						"generateAsteroidPos", o);
+				
+				
 
 			} catch (NoSuchMethodException e) {
 				// TODO Auto-generated catch block
@@ -475,8 +526,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 		}
 
-		addToRespawnSprite(astTab);
-
+		
 	}
 
 	// -------------------------------- ELEMENTY PETLI
@@ -537,8 +587,8 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		}
 
 		if (!ALIEN_PART) {
-			asteroidCount = SpriteManager.getCountAsteroids();
-
+			asteroidCount = this.getNumbVisibleAsteroid();
+			System.out.println(asteroidCount);
 			if (FIRSTROUND_STATE) {
 				FIRSTROUND_STATE = false;
 				enableAsteroidGen = true;
@@ -693,6 +743,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		gameStats.updateSpaceEnergyCounter(ship.getEnergy());
 		gameStats.updateSpaceScoreCounter(ship.getScore());
 		gameStats.updateSpaceLevelCounter(ship.getLevel());
+		gameStats.updateBigShotCounter(ship.getBigMissilePool());
 
 		// System.out.println("ALIEN="+SpriteManager.getListObject(AlienShip.class).size());
 

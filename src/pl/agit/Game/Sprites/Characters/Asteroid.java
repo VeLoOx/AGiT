@@ -110,6 +110,7 @@ public class Asteroid extends Sprite implements GameConst {
 			if (val){
 				((AsteroidDemolition) gm).addScore(50);
 				generateShatter(gm, getNode().getTranslateX(), getNode().getTranslateY(), vY);
+				//this.implode(gm);
 			}
 			return val;
 		}
@@ -189,6 +190,20 @@ public class Asteroid extends Sprite implements GameConst {
 			return true;
 
 		}
+		
+		if (this.node.getTranslateX() > wx
+				) {
+			isDead = true;
+			return true;
+
+		}
+		
+		if (this.node.getTranslateX() < 0)
+				{
+			isDead = true;
+			return true;
+
+		}
 		return false;
 	}
 
@@ -201,10 +216,12 @@ public class Asteroid extends Sprite implements GameConst {
 
 	public void handleDeath(GameWorld gm) {
 		// System.out.print("T");
+		node.setVisible(false);
+		//implode(gm);
+		
+		//noImplode(gm);
 
-		noImplode(gm);
-
-		super.handleDeath(gm);
+		//super.handleDeath(gm);
 	}
 
 	// wybuch
@@ -216,8 +233,9 @@ public class Asteroid extends Sprite implements GameConst {
 				.toValue(0).onFinished(new EventHandler() {
 					// @Override
 					public void handle(Event arg0) {
-						isDead = true;
-						gameWorld.getSceneElements().getChildren().remove(node);
+						//isDead = true;
+						//gameWorld.getSceneElements().getChildren().remove(node);
+						
 					}
 
 				}).build().play();
