@@ -105,6 +105,18 @@ public class SpriteManager {
     	return list;
     }
     
+    public static void removeAllClassObject(Class c){
+    	Iterator<Sprite> i = GAME_ACTORS.iterator();
+    	while(i.hasNext()){
+    		Object o = i.next();
+    		if(o.getClass().equals(c)){
+    			GAME_ACTORS.remove(o);
+    		}
+    	}
+    	
+    	
+    }
+    
    
     
    }

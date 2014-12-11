@@ -245,10 +245,9 @@ public class Asteroid extends Sprite implements GameConst {
 	private void generateShatter(GameWorld g, double pozx, double pozy, double vY){
 		if(radius < 15) return;
 		
-		Object[] o = {this.getNode().getTranslateX(),this.getNode().getTranslateY(),vY,radius};
-		Asteroid[] aT = null;
+		double numbShatter = 0;
 		try {
-			aT = (Asteroid[]) sm.getScript(GameConst.JS_ASTEROID_NAME).invokeFunction("generateShatter", o);
+			numbShatter = (double) sm.getScript(GameConst.JS_ASTEROID_NAME).invokeFunction("getRandNumbShatter");
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -256,7 +255,24 @@ public class Asteroid extends Sprite implements GameConst {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		((AsteroidDemolition)g).addToRespawnSprite(aT);
+		
+		
+		
+		for(int i=0;i<numbShatter;i++){
+			
+		Object[] o = {this.getNode().getTranslateX(),this.getNode().getTranslateY(),vY,radius,((AsteroidDemolition)g).getNoVisibleAsteroid()};
+		Asteroid[] aT = null;
+		try {
+			sm.getScript(GameConst.JS_ASTEROID_NAME).invokeFunction("generateShatter2", o);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		//((AsteroidDemolition)g).addToRespawnSprite(aT);
 		
 		/*Random r = new Random();
 		int newMaxRadius = (int) (radius/2);

@@ -77,7 +77,9 @@ public class AlienShip extends Sprite implements GameConst {
 		
 		node.setVisible(true);
 
-		createTime=System.currentTimeMillis();		
+		createTime=System.currentTimeMillis();	
+		Random r = new Random();
+		fireTime = (long) r.nextInt(6000-3000)+3000;
 	}
 
 	public AlienShip(double startx, double starty) {

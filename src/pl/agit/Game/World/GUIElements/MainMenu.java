@@ -2,6 +2,7 @@ package pl.agit.Game.World.GUIElements;
 
 import java.awt.Event;
 
+import pl.agit.Game.Gamedef.GameConst;
 import pl.agit.Game.World.AsteroidDemolition;
 import pl.agit.Game.World.GameWorld;
 import javafx.event.ActionEvent;
@@ -10,10 +11,12 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class MainMenu {
@@ -32,10 +35,16 @@ public class MainMenu {
 	public MainMenu() {
 		menuGroup = new Group();
 		menuVbox = new VBox();
+		
+		Rectangle backg = new Rectangle(1500,1500);
+		menuGroup.getChildren().add(backg);
+		
+		Label titleGame = new Label("SPACE War");
 
 		startB = new Button("Start");
 		startB.setPrefSize(200, 200);
 		startB.setOnAction(startClick());
+		
 		
 		resumeB = new Button("Resume");
 		resumeB.setPrefSize(200, 200);
@@ -50,10 +59,21 @@ public class MainMenu {
 		menuVbox.getChildren().add(exitB);
 		menuVbox.setTranslateX(100);
 		menuVbox.setTranslateY(50);
+		
+		menuGroup.getChildren().add(titleGame);
+		titleGame.getStyleClass().add("menuBigText");
+		titleGame.setTranslateX(500);
+		titleGame.setTranslateY(300);
 
 		menuGroup.getChildren().add(menuVbox);
 
 		menuScene = new Scene(menuGroup);
+		menuScene.getStylesheets().addAll(GameConst.CSS_PACKAGE_PATH);
+		backg.getStyleClass().add("background");
+		
+		startB.getStyleClass().add("glass-grey");
+		resumeB.getStyleClass().add("glass-grey");
+		exitB.getStyleClass().add("glass-grey");
 
 	}
 

@@ -68,6 +68,10 @@ var gameSequenceList = function(){
 	lista.add(0);
 	lista.add(0);
 	lista.add(1);
+	lista.add(0);
+	lista.add(0);
+	lista.add(1);
+	lista.add(1);
 	
 	return lista;
 }

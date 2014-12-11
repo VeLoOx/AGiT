@@ -104,6 +104,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 	private long lastAsteroidTime = 0; // czas rozpoczecia rundy
 	private long timeDead = 0;
 	private long asteroidSubTimeGeneration = 1000; // czas regenerowania//
+	private long timeWin = 0;
 													// asteroid
 	private long lastAsteroidSubTimeGeneration = 0; // ostatni czas regenracji
 	private long lastRespaw = 0;
@@ -253,7 +254,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 	}
 	
-	private Asteroid getNoVisibleAsteroid(){
+	public Asteroid getNoVisibleAsteroid(){
 		Iterator<Asteroid> i = asteroids.iterator();
 		while(i.hasNext()){
 			Asteroid a = i.next();
@@ -285,11 +286,33 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		System.out.println("JESTES MARTWY");
 
 		String text = "YOU ARE DEAD";
-		final Text text1 = new Text(600 - (text.length() * 90) / 2, 300, text);
-		text1.setFill(Color.RED);
-		text1.setFont(Font.font(java.awt.Font.SERIF, 90));
-
+		final Text text1 = new Text(400, 300, text);
+		/*text1.setFill(Color.RED);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 90));*/
+		text1.getStyleClass().add("deadText");
 		getSceneElements().getChildren().add(text1);
+
+	}
+	
+	private void prepareWinState() {
+		timeWin = System.currentTimeMillis();
+		//DEAD_STATE = true;
+		System.out.println("WYGRALES");
+
+		String text = "YOU WON";
+		final Text text1 = new Text(400, 300, text);
+		/*text1.setFill(Color.RED);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 90));*/
+		text1.getStyleClass().add("winText");
+		getSceneElements().getChildren().add(text1);
+
+	}
+	
+	private void useWinState() {
+		if (System.currentTimeMillis() - timeWin >= 2000) {
+			getGameLoop().pause();
+			returnToMenu();
+		}
 
 	}
 
@@ -504,11 +527,6 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 			Asteroid ast = getNoVisibleAsteroid();
 			Object[] o = {ast,d};
 			try {
-				/*ast = (Asteroid) scrm.getScript(
-						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
-						"generateAsteroid1", o);
-
-				astTab[i] = ast;*/
 				
 				scrm.getScript(
 						GameConst.JS_ASTEROID_DEMOLITION_NAME).invokeFunction(
@@ -540,7 +558,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		}
 
 		if (WIN_STATE == true) {
-			useDeadState();
+			useWinState();
 			return;
 		}
 
@@ -567,6 +585,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 				if (stageSequenceList.size() == stageIndex) {
 					WIN_STATE = true;
+					prepareWinState();
 					return;
 				}
 
@@ -581,6 +600,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 					enableAsteroidGen = false;
 					actualAlienMap++;
 					parkShipTime=System.currentTimeMillis();
+					
 				}
 
 			}
@@ -588,7 +608,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 		if (!ALIEN_PART) {
 			asteroidCount = this.getNumbVisibleAsteroid();
-			System.out.println(asteroidCount);
+			//wSystem.out.println(asteroidCount);
 			if (FIRSTROUND_STATE) {
 				FIRSTROUND_STATE = false;
 				enableAsteroidGen = true;
@@ -605,6 +625,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 				if (stageSequenceList.size() == stageIndex) {
 					WIN_STATE = true;
+					prepareWinState();
 					return;
 				}
 				
@@ -637,6 +658,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		
 		if ( time < waitParkTime) {
 			gameStats.getTimeText().setVisible(true);
+			gameStats.getTimeText().toFront();
 			gameStats.updateTime((waitParkTime/1000)-time/1000);
 			ship.parkSpaceShip();
 			try {
