@@ -299,7 +299,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 		//DEAD_STATE = true;
 		System.out.println("WYGRALES");
 
-		String text = "YOU WON";
+		String text = "YOU WIN";
 		final Text text1 = new Text(400, 300, text);
 		/*text1.setFill(Color.RED);
 		text1.setFont(Font.font(java.awt.Font.SERIF, 90));*/
@@ -671,6 +671,9 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 			}
 			return;
 		}
+		
+		if(!sprite.getNode().isVisible()) return;
+		sprite.update();
 
 		if (sprite instanceof SpaceShip) {
 			
@@ -683,7 +686,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 
 		if (sprite instanceof Asteroid) {
 			Asteroid sphere = (Asteroid) sprite;
-
+			
 			if (sphere.handleBoundsMeet(getGameScene().getWidth(),
 					getGameScene().getHeight() - 60))
 				((Asteroid) sprite).handleDeath(this);
@@ -707,7 +710,7 @@ public class AsteroidDemolition extends GameWorld implements GameConst {
 			}
 		}
 
-		sprite.update();
+		
 
 	}
 
